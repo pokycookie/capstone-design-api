@@ -1,0 +1,26 @@
+{
+  "name": "capstone-design-api",
+  "version": "1.0.0",
+  "description": "api for arduino capstone design project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon indes.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pokycookie/capstone-design-api.git"
+  },
+  "author": "PokyCookie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pokycookie/capstone-design-api/issues"
+  },
+  "homepage": "https://github.com/pokycookie/capstone-design-api#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
