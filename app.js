@@ -16,10 +16,15 @@ const testData = {
 dotenv.config();
 const app = express();
 
-mongoose.connect(process.env.DB_URI, { useNewUrlParser: true });
-mongoose.connection.once("open", () => {
-  console.log("MongoDB is Connected");
-});
+try {
+  mongoose.connect(process.env.DB_URI, { useNewUrlParser: true });
+  mongoose.connection.once("open", () => {
+    console.log("MongoDB is Connected");
+  });
+} catch (error) {
+  console.error("mongoDB error");
+  console.log(error);
+}
 
 app.use(helmet());
 app.use(express.json());
@@ -41,7 +46,7 @@ app.get("/api/data", async (req, res) => {
 app.post("/api/data", (req, res) => {
   console.log(req.body);
   if (req.body != undefined) {
-    if (req.body.auth === process.env.AUTH_KEY) {
+    if (req.body.auth == process.env.AUTH_KEY) {
       const location = req.body.location;
       const sound = req.body.sound;
       const vibration = req.body.vibration;
