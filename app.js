@@ -1,39 +1,79 @@
 const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 const { default: helmet } = require("helmet");
 
-const app = express();
+const Data = require("./models/dataModel");
 
-const homeData = {
-  time: new Date().toString(),
-  data: "PKNU CAPSTONE DESIGN API",
-};
-const tempData = {
+const testData = {
   time: new Date().toString(),
   data: {
-    sound: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-    vibration: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
+    contents: "PKNU CAPSTONE DESIGN API",
+    status: "200 OK",
   },
 };
+
+dotenv.config();
+const app = express();
+
+mongoose.connect(process.env.DB_URI, { useNewUrlParser: true });
+mongoose.connection.once("open", () => {
+  console.log("MongoDB is Connected");
+});
 
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
-  res.json(homeData);
+  res.json("homepage");
 });
 
-app.get("/data", (req, res) => {
-  res.json(tempData);
+app.get("/api/test", (req, res) => {
+  res.json(testData);
 });
 
-app.post("/data", (req, res) => {
+app.get("/api/data", async (req, res) => {
+  const data = await Data.findOne({});
+  res.json(data);
+});
+
+app.post("/api/data", (req, res) => {
   console.log(req.body);
   if (req.body != undefined) {
-    res.status(200);
-    res.json(req.body);
+    if (req.body.auth === process.env.AUTH_KEY) {
+      const location = req.body.location;
+      const sound = req.body.sound;
+      const vibration = req.body.vibration;
+      const updated = new Date();
+      const newData = new Data({ location, sound, vibration, updated });
+
+      newData
+        .save()
+        .then(() => {
+          console.log("OK");
+          res.status(200).json({
+            status: "OK",
+            data: req.body,
+          });
+        })
+        .catch((err) => {
+          console.log("ERROR");
+          res.status(400).json(err);
+        });
+    } else {
+      console.log("AUTH INCORRECT");
+      res.status(403);
+      res.json({
+        status: "FORBIDDEN",
+      });
+    }
   } else {
+    console.log("no body");
     res.status(400);
+    res.json({
+      status: "BAD REQUEST",
+    });
   }
 });
 
