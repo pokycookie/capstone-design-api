@@ -63,18 +63,20 @@ app.post("/api/data", (req, res) => {
           });
         })
         .catch((err) => {
-          console.log("ERROR");
+          console.error("DB error");
           res.status(400).json(err);
         });
     } else {
-      console.log("AUTH INCORRECT");
+      console.error(`AUTH: ${req.body.auth == process.env.AUTH_KEY}`);
+      console.error(`req: ${req.body.auth}`);
+      console.error(`key: ${process.env.AUTH_KEY}`);
       res.status(403);
       res.json({
         status: "FORBIDDEN",
       });
     }
   } else {
-    console.log("no body");
+    console.error("empty body");
     res.status(400);
     res.json({
       status: "BAD REQUEST",
