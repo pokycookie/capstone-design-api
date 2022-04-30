@@ -13,7 +13,7 @@ function App() {
 
   const getData = () => {
     axios
-      .get(`http://localhost:4000/api/data`)
+      .get(`${process.env.REACT_APP_HOST}/api/data`)
       .then((res) => {
         setDB(res.data);
       })
@@ -29,7 +29,7 @@ function App() {
     }
 
     axios
-      .post(`http://localhost:4000/api/data`, {
+      .post(`${process.env.REACT_APP_HOST}/api/data`, {
         location,
         sound,
         vibration,
@@ -48,7 +48,7 @@ function App() {
     if (Array.isArray(idArr)) {
       idArr.forEach((id) => {
         axios
-          .delete(`http://localhost:4000/api/data/${id}`)
+          .delete(`${process.env.REACT_APP_HOST}/api/data/${id}`)
           .then(() => {
             console.log("DELETE OK");
           })
