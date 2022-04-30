@@ -36,7 +36,13 @@ if (process.env.NODE_ENV === "production") {
 }
 
 app.get("/", (req, res) => {
-  res.json("homepage");
+  if (process.env.NODE_ENV === "production") {
+    res.sendFile(
+      this.path.resolve(__dirname, "./client", "build", "index.html")
+    );
+  } else {
+    res.json("homepage");
+  }
 });
 
 app.get("/api/test", (req, res) => {
