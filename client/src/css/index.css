@@ -2,3 +2,9 @@
 @import "./App.css";
 @import "./basicDB.css";
 @import "./postDB.css";
+@import "./auth.css";
+@import "./bottomDiv.css";
+
+input:focus {
+  outline: none;
+}
