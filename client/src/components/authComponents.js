@@ -60,7 +60,7 @@ export function AuthComponents(props) {
                     if (res.data.info === "Success") {
                       props.setLogin(res.data.user);
                     } else {
-                      setAuthError(res.data.info);
+                      setAuthError(res.data);
                     }
                   })
                   .catch((err) => {

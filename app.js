@@ -95,6 +95,7 @@ app.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
+/*
 app.post("/admin", async (req, res) => {
   const pw = await encrypt("PKNUHSW201712214");
   console.log(pw);
@@ -118,6 +119,7 @@ app.post("/admin", async (req, res) => {
       res.json(err);
     });
 });
+*/
 
 // API Request
 app.get("/api/test", (req, res) => {
