@@ -26,7 +26,7 @@ export function BasicDBComponents(props) {
           Delete
         </button>
       </div>
-      <div className="dbList title">
+      <div className="dbList DBtitle">
         <div className="dbElement">
           <input
             type="checkbox"

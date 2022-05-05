@@ -27,7 +27,6 @@ export function CheckBox(props) {
           props.checkSet.delete(props.element._id);
           props.setCheckSet(props.checkSet);
         }
-        console.log(props.checkSet);
       }}
     />
   );

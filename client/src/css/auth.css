@@ -10,12 +10,13 @@
 
 .authArea {
   width: 700px;
-  height: 400px;
+  height: auto;
   border-radius: 20px;
   background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 40px 0px 40px 0px;
 }
 
 .authSection {
@@ -79,6 +80,7 @@
   border-radius: 50px;
   border: none;
   margin-top: 10px;
+  margin-bottom: 10px;
   font-weight: 600;
   font-size: 15px;
   color: white;
@@ -99,4 +101,11 @@
   color: red;
   padding: 0px 10px 0px 10px;
   font-size: 10px;
+}
+
+.signupBtn {
+  font-size: 11px;
+  font-weight: 600;
+  color: blck;
+  cursor: pointer;
 }

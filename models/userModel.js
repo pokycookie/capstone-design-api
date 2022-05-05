@@ -5,10 +5,10 @@ const Schema = mongoose.Schema;
 /*
 ---------------------------------------------
 securityLevel: 0 ~ 3
-level 0: all permission + can create User
-level 1: can update DB data
-level 2: can see all DB data
-level 3: can only see own DB data
+level 0: all permission + can create User (Master)
+level 1: can update data + can see all DB (Administrator)
+level 2: can only update data (Arduino)
+level 3: can only see own DB data (Client)
 ---------------------------------------------
 */
 

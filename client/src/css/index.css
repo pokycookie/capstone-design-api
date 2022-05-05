@@ -3,7 +3,25 @@
 @import "./basicDB.css";
 @import "./postDB.css";
 @import "./auth.css";
-@import "./bottomDiv.css";
+@import "./nav.css";
+@import "./main.css";
+@import "./history.css";
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  background-color: #f2f2f2;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
 
 input:focus {
   outline: none;

@@ -6,9 +6,10 @@ const session = require("express-session");
 const passport = require("passport");
 const passportConfig = require("./passport");
 const { default: helmet } = require("helmet");
+const { encrypt } = require("./crypto");
 const Data = require("./models/dataModel");
 const User = require("./models/userModel");
-const { encrypt } = require("./crypto");
+const History = require("./models/historyModel");
 
 const testData = {
   location: "PKNU CAPSTONE DESIGN API",
@@ -52,8 +53,31 @@ passportConfig();
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 } else {
-  app.use(cors());
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
 }
+
+// Authenticate
+app.get("/auth", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json(req.user);
+  } else {
+    res.send(false);
+  }
+});
+
+// Middleware
+const checkLogin = (req, res, next) => {
+  if (req.isAuthenticated() === true) {
+    next();
+  } else {
+    res.send("Need Login");
+  }
+};
 
 // Routing
 app.get("/", (req, res) => {
@@ -95,38 +119,98 @@ app.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-/*
-app.post("/admin", async (req, res) => {
-  const pw = await encrypt("PKNUHSW201712214");
-  console.log(pw);
+app.get("/logout", checkLogin, (req, res) => {
+  req.logout();
+  req.session.save(() => {
+    res.send("Logout");
+  });
+});
+
+app.post("/signup", async (req, res) => {
+  const id = req.body.id;
+  const pw = await encrypt(req.body.pw);
+  const nickname = req.body.nickname;
+  const signUpKey = req.body.inputKey;
+
   const newID = new User({
-    id: "HSW",
+    id,
     key: pw.key,
     salt: pw.salt,
-    nickname: "HSW",
+    nickname,
     updated: new Date(),
     created: new Date(),
     securityLevel: 0,
   });
-  newID
+
+  if ((await User.findOne({ id })) !== null) {
+    res.json({
+      info: "ID is already exist",
+    });
+  } else if ((await User.findOne({ nickname })) !== null) {
+    res.json({
+      info: "Same Nickname is already exist",
+    });
+  } else {
+    if (signUpKey === process.env.SIGNUP_KEY) {
+      newID
+        .save()
+        .then(() => {
+          console.log("ID Created");
+          res.json({
+            info: "Success",
+            newID,
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          res.json(err);
+        });
+    }
+  }
+});
+
+app.get("/history", checkLogin, async (req, res) => {
+  const history = await History.find().sort({
+    year: "desc",
+    month: "desc",
+    date: "desc",
+    updated: "desc",
+  });
+  console.log(history);
+  res.json(history);
+});
+
+app.post("/history", checkLogin, (req, res) => {
+  const content = req.body.content;
+  const year = req.body.year;
+  const month = req.body.month;
+  const date = req.body.date;
+
+  const history = new History({
+    content,
+    year,
+    month,
+    date,
+    updated: new Date(),
+  });
+
+  history
     .save()
     .then(() => {
-      console.log("ID Created");
-      res.json(newID);
+      console.log("history updated");
+      res.json("history updated");
     })
     .catch((err) => {
       console.error(err);
-      res.json(err);
     });
 });
-*/
 
 // API Request
 app.get("/api/test", (req, res) => {
   res.json(testData);
 });
 
-app.get("/api/data", (req, res) => {
+app.get("/api/data", checkLogin, (req, res) => {
   const date = req.query.date;
   const location = req.query.location;
 
@@ -140,7 +224,7 @@ app.get("/api/data", (req, res) => {
     });
 });
 
-app.post("/api/data", (req, res) => {
+app.post("/api/data", checkLogin, (req, res) => {
   console.log(req.body);
   if (req.body != undefined) {
     if (req.body.auth === process.env.AUTH_KEY) {
@@ -178,7 +262,7 @@ app.post("/api/data", (req, res) => {
   }
 });
 
-app.delete("/api/data/:id", (req, res) => {
+app.delete("/api/data/:id", checkLogin, (req, res) => {
   // Data.deleteMany({ _id: { $in: req.body.idArr } })
   Data.deleteOne({ _id: req.params.id })
     .then((result) => {
