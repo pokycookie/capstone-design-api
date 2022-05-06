@@ -16,15 +16,30 @@ export function BasicDBComponents(props) {
   return (
     <div className="basicDBArea">
       <div className="nav">
-        <button onClick={() => refresh()}>Refresh</button>
-        <button
-          onClick={() => {
-            props.deleteData(Array.from(checkSet));
-            refresh();
-          }}
-        >
-          Delete
-        </button>
+        <div className="nav-left">
+          <button className="dbBtn" onClick={() => refresh()}>
+            REFRESH
+          </button>
+        </div>
+        <div className="nav-right">
+          <button
+            className="dbBtn"
+            onClick={() => {
+              props.setUpdateDataModal(true);
+            }}
+          >
+            UPLOAD
+          </button>
+          <button
+            className="dbBtn delete"
+            onClick={() => {
+              props.deleteData(Array.from(checkSet));
+              refresh();
+            }}
+          >
+            DELETE
+          </button>
+        </div>
       </div>
       <div className="dbList DBtitle">
         <div className="dbElement">

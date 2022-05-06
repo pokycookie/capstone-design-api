@@ -1,10 +1,10 @@
 .updateHistoryAreaBack {
   position: fixed;
   display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
   height: 100%;
+  justify-content: center;
+  align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
 }
 .updateHistoryArea {
@@ -73,7 +73,7 @@
 }
 .historyArea .historyUl {
   width: 600px;
-  height: 1000px;
+  height: 900px;
   overflow-y: auto;
   overflow-x: hidden;
   margin-top: 20px;

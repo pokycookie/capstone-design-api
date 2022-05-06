@@ -2,11 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { URI } from "../App";
 import { BasicDBComponents } from "./basicDBComponents";
-import { HistoryComponents } from "./history/historyComponents";
 import { PostDBComponents } from "./postDBComponents";
+import { HistoryComponents } from "./history/historyComponents";
 
 export function CoreComponents(props) {
   const [DB, setDB] = useState([]);
+  const [updateDataModal, setUpdateDataModal] = useState(false);
 
   useEffect(() => {
     getData();
@@ -74,16 +75,28 @@ export function CoreComponents(props) {
       <div className="title">
         <p>2022 PKNU CAPSTONE DESIGN APP</p>
       </div>
-      {props.menu === "history" ? (
-        <HistoryComponents
-          login={props.login}
-          setUpdateHistory={props.setUpdateHistory}
-        />
-      ) : null}
-      {props.menu === "dashboard" ? (
-        <BasicDBComponents DB={DB} getData={getData} deleteData={deleteData} />
-      ) : null}
-      {/* {props.login !== false ? <PostDBComponents postData={postData} /> : null} */}
+      <div className="contentArea">
+        {props.menu === "history" ? (
+          <HistoryComponents
+            login={props.login}
+            setUpdateHistory={props.setUpdateHistory}
+          />
+        ) : null}
+        {props.menu === "alldb" ? (
+          <BasicDBComponents
+            DB={DB}
+            getData={getData}
+            deleteData={deleteData}
+            setUpdateDataModal={setUpdateDataModal}
+          />
+        ) : null}
+        {updateDataModal === true ? (
+          <PostDBComponents
+            postData={postData}
+            setUpdateDataModal={setUpdateDataModal}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

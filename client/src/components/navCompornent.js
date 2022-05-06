@@ -61,7 +61,7 @@ export function NavComponents(props) {
         </button>
         {props.login !== false && props.login.securityLevel === 0 ? (
           <button>
-            <p>Matser</p>
+            <p>Master</p>
           </button>
         ) : null}
         <button

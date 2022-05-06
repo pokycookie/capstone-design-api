@@ -53,6 +53,7 @@ export function App() {
           setUpdateHistory={setUpdateHistory}
         />
       </main>
+      {/* Modal Windows Zone */}
       {login === false ? (
         <AuthComponents setLogin={setLogin} login={login} />
       ) : null}

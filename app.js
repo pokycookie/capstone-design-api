@@ -139,7 +139,7 @@ app.post("/signup", async (req, res) => {
     nickname,
     updated: new Date(),
     created: new Date(),
-    securityLevel: 0,
+    securityLevel: 1,
   });
 
   if ((await User.findOne({ id })) !== null) {
