@@ -1,0 +1,43 @@
+{
+  "name": "capstone-design-api",
+  "version": "1.0.0",
+  "engines": {
+    "node": "16.14.2",
+    "npm": "8.5.0 "
+  },
+  "description": "api for arduino capstone design project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pokycookie/capstone-design-api.git"
+  },
+  "author": "PokyCookie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pokycookie/capstone-design-api/issues"
+  },
+  "homepage": "https://github.com/pokycookie/capstone-design-api#readme",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/react-fontawesome": "^0.1.18",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2",
+    "helmet": "^5.0.2",
+    "mongoose": "^6.3.0",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

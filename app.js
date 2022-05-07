@@ -1,0 +1,319 @@
+const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const session = require("express-session");
+const passport = require("passport");
+const passportConfig = require("./passport");
+const {default: helmet} = require("helmet");
+const {encrypt} = require("./crypto");
+const Data = require("./models/dataModel");
+const User = require("./models/userModel");
+const History = require("./models/historyModel");
+
+const testData = {
+  location: "PKNU CAPSTONE DESIGN API",
+  sound: 200,
+  vibration: 300,
+  updated: new Date(),
+};
+
+dotenv.config();
+const app = express();
+
+// MongoDB
+try {
+  mongoose.connect(process.env.DB_URI, {useNewUrlParser: true});
+  mongoose.connection.once("open", () => {
+    console.log("MongoDB is Connected");
+  });
+} catch (error) {
+  console.error("mongoDB error");
+  console.log(error);
+}
+
+// Express JS
+app.use(helmet());
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+
+// Passport JS
+app.use(
+  session({
+    secret: process.env.SESSION_KEY,
+    resave: true,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+passportConfig();
+
+// Development vs Production
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+} else {
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
+}
+
+// Authenticate
+app.get("/auth", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json(req.user);
+  } else {
+    res.send(false);
+  }
+});
+
+// Middleware
+const checkLogin = (req, res, next) => {
+  if (req.isAuthenticated() === true) {
+    next();
+  } else {
+    res.send("Need Login");
+  }
+};
+
+// Routing
+app.get("/", (req, res) => {
+  if (process.env.NODE_ENV === "production") {
+    res.sendFile(
+      this.path.resolve(__dirname, "./client", "build", "index.html")
+    );
+  } else {
+    res.json("homepage");
+  }
+});
+
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error(err);
+      next(err);
+    }
+    if (user) {
+      req.logIn(user, (err) => {
+        if (err) {
+          next(err);
+        } else {
+          if (info.message === "Success") {
+            res.json({
+              info: info.message,
+              user,
+            });
+          } else {
+            res.json({
+              info: info.message,
+            });
+          }
+        }
+      });
+    } else {
+      res.send(info.message);
+    }
+  })(req, res, next);
+});
+
+app.get("/logout", checkLogin, (req, res) => {
+  req.logout();
+  req.session.save(() => {
+    res.send("Logout");
+  });
+});
+
+app.post("/signup", async (req, res) => {
+  const id = req.body.id;
+  const pw = await encrypt(req.body.pw);
+  const nickname = req.body.nickname;
+  const signUpKey = req.body.inputKey;
+
+  const newID = new User({
+    id,
+    key: pw.key,
+    salt: pw.salt,
+    nickname,
+    updated: new Date(),
+    created: new Date(),
+    securityLevel: 1,
+  });
+
+  if ((await User.findOne({id})) !== null) {
+    res.json({
+      info: "ID is already exist",
+    });
+  } else if ((await User.findOne({nickname})) !== null) {
+    res.json({
+      info: "Same Nickname is already exist",
+    });
+  } else {
+    if (signUpKey === process.env.SIGNUP_KEY) {
+      newID
+        .save()
+        .then(() => {
+          console.log("ID Created");
+          res.json({
+            info: "Success",
+            newID,
+          });
+        })
+        .catch((err) => {
+          console.error(err);
+          res.json(err);
+        });
+    }
+  }
+});
+
+app.get("/history", checkLogin, async (req, res) => {
+  const history = await History.find().sort({
+    year: "desc",
+    month: "desc",
+    date: "desc",
+    updated: "desc",
+  });
+  res.json(history);
+});
+
+app.post("/history", checkLogin, (req, res) => {
+  const content = req.body.content;
+  const year = req.body.year;
+  const month = req.body.month;
+  const date = req.body.date;
+
+  const history = new History({
+    content,
+    year,
+    month,
+    date,
+    updated: new Date(),
+  });
+
+  history
+    .save()
+    .then(() => {
+      console.log("history updated");
+      res.json("history updated");
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+// Filter
+const filterOption = (flag, value) => {
+  switch (flag) {
+    case "$lt":
+      return {$lt: value};
+    case "$lte":
+      return {$lte: value};
+    case "$gt":
+      return {$gt: value};
+    case "$gte":
+      return {$gte: value};
+    case "$equals":
+      return {$equals: value};
+    default:
+      break;
+  }
+};
+
+// API Request
+app.get("/api/test", (req, res) => {
+  res.json(testData);
+});
+
+app.get("/api/data", checkLogin, (req, res) => {
+  const filterLocation = req.query.filterLocation;
+  const filterSound = req.query.filterSound;
+  const filterVibration = req.query.filterVibration;
+  const filterUpdated = req.query.filterUpdated;
+
+  const filterLocationFlag = req.query.filterLocationFlag;
+  const filterSoundFlag = req.query.filterSoundFlag;
+  const filterVibrationFlag = req.query.filterVibrationFlag;
+  const filterUpdatedFlag = req.query.filterUpdatedFlag;
+
+  const sortLocation = req.query.sortLocation;
+  const sortSound = req.query.sortSound;
+  const sortVibration = req.query.sortVibration;
+  const sortUpdated = req.query.sortUpdated;
+
+  const sortOption = {};
+  if (sortLocation !== undefined) sortOption.location = sortLocation;
+  if (sortSound !== undefined) sortOption.sound = sortSound;
+  if (sortVibration !== undefined) sortOption.vibration = sortVibration;
+  if (sortUpdated !== undefined) sortOption.updated = sortUpdated;
+
+  Data.find({
+    location: filterOption(filterLocationFlag, filterLocation) || {
+      $exists: true,
+    },
+    sound: filterOption(filterSoundFlag, filterSound) || {$exists: true},
+    vibration: filterOption(filterVibrationFlag, filterVibration) || {
+      $exists: true,
+    },
+    updated: filterOption(filterUpdatedFlag, filterUpdated) || {$exists: true},
+  })
+    .sort(sortOption)
+    .then((result) => res.json(result))
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+app.post("/api/data", checkLogin, (req, res) => {
+  if (req.body != undefined) {
+    if (req.body.auth === process.env.AUTH_KEY) {
+      const location = req.body.location;
+      const sound = req.body.sound;
+      const vibration = req.body.vibration;
+      const updated = new Date();
+      const newData = new Data({location, sound, vibration, updated});
+
+      newData
+        .save()
+        .then(() => {
+          console.log("Upload OK");
+          res.status(200).json({
+            status: "OK",
+            data: req.body,
+          });
+        })
+        .catch((err) => {
+          console.error("DB error");
+          res.status(400).json(err);
+        });
+    } else {
+      console.log("Incorrect auth");
+      res.status(403);
+      res.json({
+        status: "INCORRECT AUTH",
+      });
+    }
+  } else {
+    console.error("empty body");
+    res.status(400);
+    res.json({
+      status: "BAD REQUEST",
+    });
+  }
+});
+
+app.delete("/api/data/:id", checkLogin, (req, res) => {
+  // Data.deleteMany({ _id: { $in: req.body.idArr } })
+  Data.deleteOne({_id: req.params.id})
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(400).json(err);
+    });
+});
+
+module.exports = app;

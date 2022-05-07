@@ -1,0 +1,142 @@
+.navArea {
+  width: 100%;
+  height: 100%;
+  background-color: #1b2433;
+}
+
+.profileArea {
+  height: 100px;
+  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.profileArea .profile {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  grid-template-rows: 35px 25px;
+  grid-template-areas:
+    "image nickname"
+    "image level";
+  align-items: center;
+  justify-items: start;
+  align-content: center;
+  box-sizing: border-box;
+  color: black;
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+.profileArea .userImg {
+  grid-area: image;
+  border-radius: 100%;
+  width: 60px;
+  height: 60px;
+  background-image: linear-gradient(
+    45deg,
+    #ff9a9e 0%,
+    #fad0c4 99%,
+    #fad0c4 100%
+  );
+}
+.profileArea .userNicknameArea {
+  grid-area: nickname;
+  height: 100%;
+  margin-left: 15px;
+  font-weight: 600;
+  font-size: 23px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.profileArea .userMenu {
+  margin-left: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.profileArea .userLevel {
+  grid-area: level;
+  margin-left: 15px;
+  font-size: 12px;
+}
+
+.navArea .userMenuArea {
+  width: 100%;
+  height: 0px;
+  transition: all ease-out 0.5s;
+  background-color: #cca8e9;
+  overflow: hidden;
+}
+.navArea .userMenuArea button {
+  width: 100%;
+  height: 50px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  font-size: 11px;
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 40px;
+  transition: all ease-out 0.3s;
+}
+.navArea .userMenuArea button:hover {
+  background-color: #c3bef0;
+}
+.navArea .userMenuArea button:last-child:hover {
+  background-color: #e84545;
+}
+.navArea .userMenuArea .userMenuAreaTitle {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 40px;
+  color: white;
+  box-sizing: border-box;
+  border-bottom: 1px solid white;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.navArea .menuArea .menuAreaTitle {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 40px;
+  color: white;
+  box-sizing: border-box;
+  border-bottom: 1px solid white;
+  font-size: 10px;
+  font-weight: 600;
+}
+.navArea .menuArea .menuAreaList {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 40px;
+  color: white;
+  box-sizing: border-box;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all ease-out 0.3s;
+}
+.navArea .menuArea .menuAreaList:hover {
+  background-color: #3e497a;
+}

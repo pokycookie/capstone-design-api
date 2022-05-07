@@ -1,0 +1,135 @@
+.updateHistoryAreaBack {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.updateHistoryArea {
+  width: 500px;
+  height: auto;
+  border-radius: 20px;
+  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 0px 40px 0px;
+}
+.updateHistoryArea textarea {
+  width: 300px !important;
+  height: 100px !important;
+  padding: 0px !important;
+  resize: none;
+  box-sizing: border-box;
+}
+.updateHistoryArea textarea:focus {
+  outline: none;
+}
+
+.updateHistoryArea .dateInput {
+  width: 300px;
+  height: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.updateHistoryArea .dateInput input {
+  width: 33%;
+  height: 100%;
+  padding: 0px;
+  border: 1px solid black;
+  box-sizing: border-box;
+  text-align: center;
+}
+.updateHistoryArea .btnArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 30px;
+  margin-top: 20px;
+}
+.updateHistoryArea .btnArea button {
+  width: 100px;
+  height: 30px;
+  margin: 0px 5px 0px 5px;
+}
+
+/* history */
+
+.historyArea {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 20px 0px 20px 0px;
+  background-color: white;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+.historyArea .historyUl {
+  width: 600px;
+  height: 900px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.historyArea .historyUl::-webkit-scrollbar {
+  width: 10px;
+}
+.historyArea .historyUl::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: linear-gradient(to right, rgb(242, 112, 156), rgb(255, 148, 114));
+}
+
+.historyArea .btnArea {
+  width: 500px;
+  height: 30px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.historyArea .btnArea button {
+  width: 100px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.historyArea .historyList {
+  width: 500px;
+  flex: 1;
+  background: linear-gradient(to right, rgb(242, 112, 156), rgb(255, 148, 114));
+  padding: 10px 20px 10px 20px;
+  border-radius: 20px;
+  display: grid;
+  grid-template-rows: 1fr 30px;
+  box-sizing: border-box;
+  margin: 20px 0px 20px 0px;
+  color: white;
+}
+.historyArea .historyList-content {
+  width: 100%;
+  height: 100%;
+  padding-bottom: 5px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+}
+.historyArea .historyList-date {
+  width: 100%;
+  height: 100%;
+  margin-top: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: right;
+}
