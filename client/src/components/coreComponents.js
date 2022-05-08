@@ -14,10 +14,12 @@ export function CoreComponents(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.login]);
 
-  const getData = () => {
+  const getData = (params) => {
     if (props.login !== false) {
       axios
-        .get(`${URI}/api/data`)
+        .get(`${URI}/api/data`, {
+          params,
+        })
         .then((res) => {
           setDB(res.data);
         })
@@ -85,6 +87,7 @@ export function CoreComponents(props) {
         {props.menu === "alldb" ? (
           <BasicDBComponents
             DB={DB}
+            login={props.login}
             getData={getData}
             deleteData={deleteData}
             setUpdateDataModal={setUpdateDataModal}

@@ -67,9 +67,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 30px;
   box-sizing: border-box;
   padding: 20px 0px 20px 0px;
+  background-color: white;
+  border-radius: 20px;
+  box-sizing: border-box;
 }
 .historyArea .historyUl {
   width: 600px;
@@ -77,6 +79,10 @@
   overflow-y: auto;
   overflow-x: hidden;
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 .historyArea .historyUl::-webkit-scrollbar {
   width: 10px;
@@ -101,7 +107,7 @@
 
 .historyArea .historyList {
   width: 500px;
-  height: 120px;
+  flex: 1;
   background: linear-gradient(to right, rgb(242, 112, 156), rgb(255, 148, 114));
   padding: 10px 20px 10px 20px;
   border-radius: 20px;

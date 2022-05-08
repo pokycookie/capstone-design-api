@@ -88,6 +88,7 @@
   justify-content: flex-start;
   align-items: center;
   padding-left: 40px;
+  transition: all ease-out 0.3s;
 }
 .navArea .userMenuArea button:hover {
   background-color: #c3bef0;
@@ -134,6 +135,7 @@
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
+  transition: all ease-out 0.3s;
 }
 .navArea .menuArea .menuAreaList:hover {
   background-color: #3e497a;

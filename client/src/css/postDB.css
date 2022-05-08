@@ -70,6 +70,7 @@
   background-color: #1b2433;
   color: white;
   border-radius: 5px;
+  transition: all ease-out 0.2s;
 }
 .postDBModal .nav .dbBtn:hover {
   background-color: #3e497a;

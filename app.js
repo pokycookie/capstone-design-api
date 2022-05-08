@@ -176,7 +176,6 @@ app.get("/history", checkLogin, async (req, res) => {
     date: "desc",
     updated: "desc",
   });
-  console.log(history);
   res.json(history);
 });
 
@@ -205,27 +204,71 @@ app.post("/history", checkLogin, (req, res) => {
     });
 });
 
+// Filter
+const filterOption = (flag, value) => {
+  switch (flag) {
+    case "$lt":
+      return { $lt: value };
+    case "$lte":
+      return { $lte: value };
+    case "$gt":
+      return { $gt: value };
+    case "$gte":
+      return { $gte: value };
+    case "$equals":
+      return { $equals: value };
+    default:
+      break;
+  }
+};
+
 // API Request
 app.get("/api/test", (req, res) => {
   res.json(testData);
 });
 
 app.get("/api/data", checkLogin, (req, res) => {
-  const date = req.query.date;
-  const location = req.query.location;
+  const filterLocation = req.query.filterLocation;
+  const filterSound = req.query.filterSound;
+  const filterVibration = req.query.filterVibration;
+  const filterUpdated = req.query.filterUpdated;
+
+  const filterLocationFlag = req.query.filterLocationFlag;
+  const filterSoundFlag = req.query.filterSoundFlag;
+  const filterVibrationFlag = req.query.filterVibrationFlag;
+  const filterUpdatedFlag = req.query.filterUpdatedFlag;
+
+  const sortLocation = req.query.sortLocation;
+  const sortSound = req.query.sortSound;
+  const sortVibration = req.query.sortVibration;
+  const sortUpdated = req.query.sortUpdated;
+
+  const sortOption = {};
+  if (sortLocation !== undefined) sortOption.location = sortLocation;
+  if (sortSound !== undefined) sortOption.sound = sortSound;
+  if (sortVibration !== undefined) sortOption.vibration = sortVibration;
+  if (sortUpdated !== undefined) sortOption.updated = sortUpdated;
 
   Data.find({
-    date: date || { $exists: true },
-    location: location || { $exists: true },
+    location: filterOption(filterLocationFlag, filterLocation) || {
+      $exists: true,
+    },
+    sound: filterOption(filterSoundFlag, filterSound) || { $exists: true },
+    vibration: filterOption(filterVibrationFlag, filterVibration) || {
+      $exists: true,
+    },
+    updated: filterOption(filterUpdatedFlag, filterUpdated) || {
+      $exists: true,
+    },
   })
+    .sort(sortOption)
     .then((result) => res.json(result))
     .catch((err) => {
       console.error(err);
     });
 });
 
-app.post("/api/data", checkLogin, (req, res) => {
-  console.log(req.body);
+app.post("/api/data", (req, res) => {
   if (req.body != undefined) {
     if (req.body.auth === process.env.AUTH_KEY) {
       const location = req.body.location;
@@ -248,6 +291,7 @@ app.post("/api/data", checkLogin, (req, res) => {
           res.status(400).json(err);
         });
     } else {
+      console.log("Incorrect auth");
       res.status(403);
       res.json({
         status: "INCORRECT AUTH",
@@ -266,7 +310,6 @@ app.delete("/api/data/:id", checkLogin, (req, res) => {
   // Data.deleteMany({ _id: { $in: req.body.idArr } })
   Data.deleteOne({ _id: req.params.id })
     .then((result) => {
-      console.log(result);
       res.status(200).json(result);
     })
     .catch((err) => {
