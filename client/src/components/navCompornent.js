@@ -87,6 +87,9 @@ export function NavComponents(props) {
             onClick={() => {
               props.setMenu("dashboard");
             }}
+            style={
+              props.menu === "dashboard" ? { backgroundColor: "#3e497a" } : null
+            }
           >
             DASHBOARD
           </li>
@@ -95,22 +98,31 @@ export function NavComponents(props) {
             onClick={() => {
               props.setMenu("analytics");
             }}
+            style={
+              props.menu === "analytics" ? { backgroundColor: "#3e497a" } : null
+            }
           >
             ANALYTICS
           </li>
           <li
             className="menuAreaList"
             onClick={() => {
-              props.setMenu("alldb");
+              props.setMenu("database");
             }}
+            style={
+              props.menu === "database" ? { backgroundColor: "#3e497a" } : null
+            }
           >
-            ALL DB
+            DATABASE
           </li>
           <li
             className="menuAreaList"
             onClick={() => {
               props.setMenu("history");
             }}
+            style={
+              props.menu === "history" ? { backgroundColor: "#3e497a" } : null
+            }
           >
             UPDATE HISTORY
           </li>

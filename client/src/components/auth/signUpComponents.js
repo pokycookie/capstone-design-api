@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { URI } from "../App";
+import { URI } from "../../App";
 
 export function SignUpComponents(prop) {
   const props = prop.property;

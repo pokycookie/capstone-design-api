@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { AuthComponents } from "./components/authComponents";
+import { AuthComponents } from "./components/auth/authComponents";
 import { CoreComponents } from "./components/coreComponents";
 import { UpdateHistoryComponents } from "./components/history/updateHistoryComponents";
 import { NavComponents } from "./components/navCompornent";
@@ -49,6 +49,7 @@ export function App() {
       <main style={login === false ? { filter: `blur(5px)` } : null}>
         <CoreComponents
           login={login}
+          setLogin={setLogin}
           menu={menu}
           setUpdateHistory={setUpdateHistory}
         />

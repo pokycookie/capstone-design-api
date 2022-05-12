@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { URI } from "../App";
-import { BasicDBComponents } from "./basicDBComponents";
-import { PostDBComponents } from "./postDBComponents";
+import { BasicDBComponents } from "./database/basicDBComponents";
+import { PostDBComponents } from "./database/postDBComponents";
 import { HistoryComponents } from "./history/historyComponents";
+import { DashboardComponents } from "./dashboard/dashboardComponents";
 
 export function CoreComponents(props) {
   const [DB, setDB] = useState([]);
@@ -17,11 +18,12 @@ export function CoreComponents(props) {
   const getData = (params) => {
     if (props.login !== false) {
       axios
-        .get(`${URI}/api/data`, {
-          params,
-        })
+        .get(`${URI}/api/data`, { params })
         .then((res) => {
           setDB(res.data);
+          if (res.data === "Need Login") {
+            props.setLogin(false);
+          }
         })
         .catch((err) => {
           console.error(err);
@@ -78,19 +80,20 @@ export function CoreComponents(props) {
         <p>2022 PKNU CAPSTONE DESIGN APP</p>
       </div>
       <div className="contentArea">
-        {props.menu === "history" ? (
-          <HistoryComponents
-            login={props.login}
-            setUpdateHistory={props.setUpdateHistory}
-          />
-        ) : null}
-        {props.menu === "alldb" ? (
+        {props.menu === "dashboard" ? <DashboardComponents /> : null}
+        {props.menu === "database" ? (
           <BasicDBComponents
             DB={DB}
             login={props.login}
             getData={getData}
             deleteData={deleteData}
             setUpdateDataModal={setUpdateDataModal}
+          />
+        ) : null}
+        {props.menu === "history" ? (
+          <HistoryComponents
+            login={props.login}
+            setUpdateHistory={props.setUpdateHistory}
           />
         ) : null}
         {updateDataModal === true ? (

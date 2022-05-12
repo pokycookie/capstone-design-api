@@ -10,13 +10,8 @@ const { encrypt } = require("./crypto");
 const Data = require("./models/dataModel");
 const User = require("./models/userModel");
 const History = require("./models/historyModel");
-
-const testData = {
-  location: "PKNU CAPSTONE DESIGN API",
-  sound: 200,
-  vibration: 300,
-  updated: new Date(),
-};
+const moment = require("moment");
+const odata = require("./odata");
 
 dotenv.config();
 const app = express();
@@ -165,6 +160,8 @@ app.post("/signup", async (req, res) => {
           console.error(err);
           res.json(err);
         });
+    } else {
+      res.json({ info: "Incorrect Auth Key" });
     }
   }
 });
@@ -204,64 +201,10 @@ app.post("/history", checkLogin, (req, res) => {
     });
 });
 
-// Filter
-const filterOption = (flag, value) => {
-  switch (flag) {
-    case "$lt":
-      return { $lt: value };
-    case "$lte":
-      return { $lte: value };
-    case "$gt":
-      return { $gt: value };
-    case "$gte":
-      return { $gte: value };
-    case "$equals":
-      return { $equals: value };
-    default:
-      break;
-  }
-};
-
 // API Request
-app.get("/api/test", (req, res) => {
-  res.json(testData);
-});
-
 app.get("/api/data", checkLogin, (req, res) => {
-  const filterLocation = req.query.filterLocation;
-  const filterSound = req.query.filterSound;
-  const filterVibration = req.query.filterVibration;
-  const filterUpdated = req.query.filterUpdated;
-
-  const filterLocationFlag = req.query.filterLocationFlag;
-  const filterSoundFlag = req.query.filterSoundFlag;
-  const filterVibrationFlag = req.query.filterVibrationFlag;
-  const filterUpdatedFlag = req.query.filterUpdatedFlag;
-
-  const sortLocation = req.query.sortLocation;
-  const sortSound = req.query.sortSound;
-  const sortVibration = req.query.sortVibration;
-  const sortUpdated = req.query.sortUpdated;
-
-  const sortOption = {};
-  if (sortLocation !== undefined) sortOption.location = sortLocation;
-  if (sortSound !== undefined) sortOption.sound = sortSound;
-  if (sortVibration !== undefined) sortOption.vibration = sortVibration;
-  if (sortUpdated !== undefined) sortOption.updated = sortUpdated;
-
-  Data.find({
-    location: filterOption(filterLocationFlag, filterLocation) || {
-      $exists: true,
-    },
-    sound: filterOption(filterSoundFlag, filterSound) || { $exists: true },
-    vibration: filterOption(filterVibrationFlag, filterVibration) || {
-      $exists: true,
-    },
-    updated: filterOption(filterUpdatedFlag, filterUpdated) || {
-      $exists: true,
-    },
-  })
-    .sort(sortOption)
+  Data.find(odata(req.query).filter)
+    .sort(odata(req.query).orderby)
     .then((result) => res.json(result))
     .catch((err) => {
       console.error(err);
@@ -274,7 +217,7 @@ app.post("/api/data", (req, res) => {
       const location = req.body.location;
       const sound = req.body.sound;
       const vibration = req.body.vibration;
-      const updated = new Date();
+      const updated = moment(new Date()).add(9, "h");
       const newData = new Data({ location, sound, vibration, updated });
 
       newData

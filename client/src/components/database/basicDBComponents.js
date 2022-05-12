@@ -84,26 +84,22 @@ export function BasicDBComponents(props) {
     const option = {};
     const filterResult = filterText(true);
 
-    if (sortOption[0] !== false) option.sortLocation = sortOption[0];
-    if (sortOption[1] !== false) option.sortSound = sortOption[1];
-    if (sortOption[2] !== false) option.sortVibration = sortOption[2];
-    if (sortOption[3] !== false) option.sortUpdated = sortOption[3];
+    if (sortOption[0] !== false) option.$orderby_location = sortOption[0];
+    if (sortOption[1] !== false) option.$orderby_sound = sortOption[1];
+    if (sortOption[2] !== false) option.$orderby_vibration = sortOption[2];
+    if (sortOption[3] !== false) option.$orderby_updated = sortOption[3];
 
     if (filterOption[0] !== false) {
-      option.filterLocation = filterOption[0].value;
-      option.filterLocationFlag = filterResult[0];
+      option.$filter_location = `${filterResult[0]} ${filterOption[0].value}`;
     }
     if (filterOption[1] !== false) {
-      option.filterSound = filterOption[1].value;
-      option.filterSoundFlag = filterResult[1];
+      option.$filter_sound = `${filterResult[1]} ${filterOption[1].value}`;
     }
     if (filterOption[2] !== false) {
-      option.filterVibration = filterOption[2].value;
-      option.filterVibrationFlag = filterResult[2];
+      option.$filter_vibration = `${filterResult[2]} ${filterOption[2].value}`;
     }
     if (filterOption[3] !== false) {
-      option.filterUpdated = filterOption[3].value;
-      option.filterUpdatedFlag = filterResult[3];
+      option.$filter_updated = `${filterResult[3]} ${filterOption[3].value}`;
     }
 
     setAllCheck(false);
@@ -270,27 +266,29 @@ export function BasicDBComponents(props) {
         <p className="dbElement dbTitleElement">Updated</p>
       </div>
       <ul className="dbListArea">
-        {props.DB.map((element, index) => {
-          return (
-            <li className="dbList" key={index}>
-              <div className="dbElement">
-                <CheckBox
-                  className="checkbox"
-                  setCheckSet={setCheckSet}
-                  checkSet={checkSet}
-                  element={element}
-                  isAllCheck={isAllCheck}
-                  refreshFlag={refreshFlag}
-                  setRefreshFlag={setRefreshFlag}
-                />
-              </div>
-              <p className="dbElement">{element.location}</p>
-              <p className="dbElement">{element.sound}</p>
-              <p className="dbElement">{element.vibration}</p>
-              <p className="dbElement">{element.updated}</p>
-            </li>
-          );
-        })}
+        {Array.isArray(props.DB)
+          ? props.DB.map((element, index) => {
+              return (
+                <li className="dbList" key={index}>
+                  <div className="dbElement">
+                    <CheckBox
+                      className="checkbox"
+                      setCheckSet={setCheckSet}
+                      checkSet={checkSet}
+                      element={element}
+                      isAllCheck={isAllCheck}
+                      refreshFlag={refreshFlag}
+                      setRefreshFlag={setRefreshFlag}
+                    />
+                  </div>
+                  <p className="dbElement">{element.location}</p>
+                  <p className="dbElement">{element.sound}</p>
+                  <p className="dbElement">{element.vibration}</p>
+                  <p className="dbElement">{element.updated}</p>
+                </li>
+              );
+            })
+          : null}
       </ul>
     </div>
   );

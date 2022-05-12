@@ -6,6 +6,8 @@
 @import "./nav.css";
 @import "./main.css";
 @import "./history.css";
+@import "./graph.css";
+@import "./dashboard.css";
 
 html {
   width: 100%;
