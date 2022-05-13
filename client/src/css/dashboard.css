@@ -57,9 +57,11 @@
   box-sizing: border-box;
   text-align: right;
   padding: 0px 5px 0px 5px;
+  margin-left: 15px;
 }
 .dashboardComponents .dashboardNav .graphLocationInput.location {
   width: 120px;
+  margin-left: 0px;
 }
 .dashboardComponents .dashboardNav-left p {
   font-size: 11px;
@@ -69,7 +71,7 @@
 .dashboardComponents .dashboardNav .graphLocationInput-text {
   font-size: 11px;
   font-weight: 600;
-  margin: 0px 15px 0px 5px;
+  margin: 0px 0px 0px 5px;
   white-space: nowrap;
 }
 

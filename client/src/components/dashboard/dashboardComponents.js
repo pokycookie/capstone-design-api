@@ -6,6 +6,11 @@ import { useEffect, useState } from "react";
 import { URI } from "../../App";
 import { GraphComponents } from "./graphComponents";
 
+const defaultSet = new Set();
+defaultSet.add("bar");
+defaultSet.add("line");
+defaultSet.add("dot");
+
 export const DashboardComponents = () => {
   const [DB, setDB] = useState();
   const [location, setLocation] = useState(101);
@@ -16,13 +21,10 @@ export const DashboardComponents = () => {
     moment(new Date()).add(9, "h").toISOString()
   );
   const [graphCount, setGraphCount] = useState(30);
-
-  // graphType
-  const defaultSet = new Set();
-  defaultSet.add("bar");
-  defaultSet.add("line");
-  defaultSet.add("dot");
-  const [graphType, setGraphType] = useState(defaultSet);
+  const [soundGraphType, setSoundGraphType] = useState(new Set(defaultSet));
+  const [vibrationGraphType, setVibrationGraphType] = useState(
+    new Set(defaultSet)
+  );
 
   const getDB = (params) => {
     axios
@@ -96,13 +98,13 @@ export const DashboardComponents = () => {
               defaultChecked="true"
               onChange={({ target }) => {
                 if (target.checked) {
-                  const tempSet = graphType;
+                  const tempSet = soundGraphType;
                   tempSet.add("bar");
-                  setGraphType(new Set(tempSet));
+                  setSoundGraphType(new Set(tempSet));
                 } else {
-                  const tempSet = graphType;
+                  const tempSet = soundGraphType;
                   tempSet.delete("bar");
-                  setGraphType(new Set(tempSet));
+                  setSoundGraphType(new Set(tempSet));
                 }
               }}
             />
@@ -112,13 +114,13 @@ export const DashboardComponents = () => {
               defaultChecked="true"
               onChange={({ target }) => {
                 if (target.checked) {
-                  const tempSet = graphType;
+                  const tempSet = soundGraphType;
                   tempSet.add("line");
-                  setGraphType(new Set(tempSet));
+                  setSoundGraphType(new Set(tempSet));
                 } else {
-                  const tempSet = graphType;
+                  const tempSet = soundGraphType;
                   tempSet.delete("line");
-                  setGraphType(new Set(tempSet));
+                  setSoundGraphType(new Set(tempSet));
                 }
               }}
             />
@@ -128,13 +130,13 @@ export const DashboardComponents = () => {
               defaultChecked="true"
               onChange={({ target }) => {
                 if (target.checked) {
-                  const tempSet = graphType;
+                  const tempSet = soundGraphType;
                   tempSet.add("dot");
-                  setGraphType(new Set(tempSet));
+                  setSoundGraphType(new Set(tempSet));
                 } else {
-                  const tempSet = graphType;
+                  const tempSet = soundGraphType;
                   tempSet.delete("dot");
-                  setGraphType(new Set(tempSet));
+                  setSoundGraphType(new Set(tempSet));
                 }
               }}
             />
@@ -145,18 +147,68 @@ export const DashboardComponents = () => {
           DB={DB}
           graphCount={graphCount}
           feild="sound"
-          type={graphType}
+          type={soundGraphType}
         />
       </div>
       <div className="vibrationGraphArea graphArea">
         <div className="graphArea-title">
           <p>VIBRATION</p>
+          <div className="optionArea">
+            <input
+              type="checkbox"
+              defaultChecked="true"
+              onChange={({ target }) => {
+                if (target.checked) {
+                  const tempSet = vibrationGraphType;
+                  tempSet.add("bar");
+                  setVibrationGraphType(new Set(tempSet));
+                } else {
+                  const tempSet = vibrationGraphType;
+                  tempSet.delete("bar");
+                  setVibrationGraphType(new Set(tempSet));
+                }
+              }}
+            />
+            <p>Bar</p>
+            <input
+              type="checkbox"
+              defaultChecked="true"
+              onChange={({ target }) => {
+                if (target.checked) {
+                  const tempSet = vibrationGraphType;
+                  tempSet.add("line");
+                  setVibrationGraphType(new Set(tempSet));
+                } else {
+                  const tempSet = vibrationGraphType;
+                  tempSet.delete("line");
+                  setVibrationGraphType(new Set(tempSet));
+                }
+              }}
+            />
+            <p>Line</p>
+            <input
+              type="checkbox"
+              defaultChecked="true"
+              onChange={({ target }) => {
+                if (target.checked) {
+                  const tempSet = vibrationGraphType;
+                  tempSet.add("dot");
+                  setVibrationGraphType(new Set(tempSet));
+                } else {
+                  const tempSet = vibrationGraphType;
+                  tempSet.delete("dot");
+                  setVibrationGraphType(new Set(tempSet));
+                }
+              }}
+            />
+            <p>Dot</p>
+          </div>
         </div>
         <GraphComponents
           DB={DB}
           graphCount={graphCount}
           feild="vibration"
-          type={graphType}
+          type={vibrationGraphType}
         />
       </div>
     </div>

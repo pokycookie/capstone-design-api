@@ -6,7 +6,7 @@ const feildArray = ["sound", "vibration"];
 export const GraphComponents = ({ DB, feild, type }) => {
   const [polylinePoints, setPolylinePoints] = useState("");
 
-  const windowSize = useWindow(320);
+  const windowSize = useWindow(350);
   const svgHeight = 300;
   const maxWidth = windowSize.width;
   const minWidth = 1040;

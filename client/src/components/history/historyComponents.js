@@ -1,3 +1,5 @@
+import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { URI } from "../../App";
@@ -23,22 +25,26 @@ export function HistoryComponents(props) {
   return (
     <div className="historyArea">
       <div className="btnArea">
-        {(props.login !== false && props.login.securityLevel) === 0 ? (
-          <button
-            onClick={() => {
-              props.setUpdateHistory(true);
-            }}
-          >
-            UPLOAD
-          </button>
-        ) : null}
         <button
+          className="refreshBtn"
           onClick={() => {
             getHistory();
           }}
         >
-          UPDATE
+          <FontAwesomeIcon icon={faRotateRight} />
         </button>
+        {(props.login !== false && props.login.securityLevel) === 0 ? (
+          <div className="masterOption">
+            <button
+              onClick={() => {
+                props.setUpdateHistory(true);
+              }}
+            >
+              UPLOAD
+            </button>
+            <button className="deleteBtn">DELETE</button>
+          </div>
+        ) : null}
       </div>
       <ul className="historyUl">
         {Array.isArray(history)
