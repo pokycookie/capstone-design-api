@@ -78,10 +78,14 @@
 .dashboardComponents .graphArea {
   margin-bottom: 20px;
   box-sizing: border-box;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.dashboardComponents .graph {
   background-color: white;
-  box-sizing: border-box;
   border-radius: 20px;
-  /* max-width: 800px; */
 }
 .dashboardComponents .graphArea .graphArea-title {
   width: 100%;

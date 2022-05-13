@@ -4,6 +4,10 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { URI } from "../../App";
 
+const transTime = (time) => {
+  return time >= 10 ? time : `0${time}`;
+};
+
 export function HistoryComponents(props) {
   const [history, setHistory] = useState([]);
 
@@ -52,7 +56,11 @@ export function HistoryComponents(props) {
               return (
                 <li className="historyList" key={index}>
                   <p className="historyList-content">{element.content}</p>
-                  <p className="historyList-date">{`${element.year}.${element.month}.${element.date}`}</p>
+                  <p className="historyList-date">{`${transTime(
+                    element.year
+                  )}.${transTime(element.month)}.${transTime(
+                    element.date
+                  )}`}</p>
                 </li>
               );
             })
