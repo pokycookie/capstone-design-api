@@ -10,13 +10,18 @@ defaultSet.add("line");
 defaultSet.add("dot");
 
 const INFO_WIDTH = 350; // 352 for square
-const INFO_WIDTH_FULL = INFO_WIDTH + 20; // 20 is margin-left
+const INFO_WIDTH_FULL = INFO_WIDTH + 25; // 20 is margin-left
 
 export const GraphComponents = ({ DB, field }) => {
   const [polylinePoints, setPolylinePoints] = useState("");
   const [average, setAverage] = useState(0);
   const [averageLine, setAverageLine] = useState(false);
   const [graphType, setGraphType] = useState(new Set(defaultSet));
+  const [currentHover, setCurrentHover] = useState({
+    value: 0,
+    index: 0,
+    updated: new Date(),
+  });
 
   const DOM = useRef();
   const offset = useOffset(DOM);
@@ -45,7 +50,8 @@ export const GraphComponents = ({ DB, field }) => {
         setPolylinePoints("");
       }
     }
-  }, [polylinePoints, DB, windowSize]);
+    // eslint-disable-next-line
+  }, [polylinePoints, DB, windowSize, field]);
 
   useEffect(() => {
     if (Array.isArray(DB) && DB.length > 0) {
@@ -67,7 +73,7 @@ export const GraphComponents = ({ DB, field }) => {
     } else {
       setAverage(0);
     }
-  }, [DB]);
+  }, [DB, field]);
 
   if (!(typeof field === "string" && feildArray.includes(field))) return;
   if (!typeof type === "object") return;
@@ -81,6 +87,21 @@ export const GraphComponents = ({ DB, field }) => {
       const tempSet = graphType;
       tempSet.delete(type);
       setGraphType(new Set(tempSet));
+    }
+  };
+
+  const mouseHover = (element, index) => {
+    if (
+      currentHover.value !== element[field] ||
+      currentHover.updated !== element.updated ||
+      currentHover.index !== index
+    ) {
+      const tempObj = {
+        value: element[field],
+        updated: element.updated,
+        index,
+      };
+      setCurrentHover(tempObj);
     }
   };
 
@@ -141,11 +162,29 @@ export const GraphComponents = ({ DB, field }) => {
                   );
                 })
               : null}
+            {Array.isArray(DB)
+              ? DB.map((element, index) => {
+                  return (
+                    <rect
+                      className="svgGraph"
+                      key={index}
+                      x={0 + (index * svgWidth) / DB.length}
+                      y={0}
+                      width={svgWidth / DB.length}
+                      height={windowSize.height * graphHeight - 40}
+                      opacity={0}
+                      onMouseEnter={() => {
+                        mouseHover(element, index);
+                      }}
+                    />
+                  );
+                })
+              : null}
             {Array.isArray(DB) && graphType.has("line") ? (
               <polyline
                 points={polylinePoints}
                 fill="none"
-                strokeWidth={5}
+                strokeWidth={3}
                 stroke="#1b2433"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -163,7 +202,7 @@ export const GraphComponents = ({ DB, field }) => {
                           svgWidth / DB.length / 2
                       )}
                       cy={parseInt(svgHeight - element[field] * graphHeight)}
-                      r={4}
+                      r={3}
                       fill="#1b2433"
                       opacity={0.8}
                     />
@@ -215,6 +254,7 @@ export const GraphComponents = ({ DB, field }) => {
         DB={DB}
         field={field}
         average={average}
+        currentHover={currentHover}
       />
     </div>
   );

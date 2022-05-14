@@ -1,6 +1,13 @@
 import { ArcGraphComponents } from "./arcGraphComponents";
 
-export function GraphInfoComponents({ offset, field, width, DB, average }) {
+export function GraphInfoComponents({
+  offset,
+  field,
+  width,
+  DB,
+  average,
+  currentHover,
+}) {
   return (
     <div className="graphInfoComponents" style={{ width }}>
       <div className="graphInfo-title">
@@ -8,9 +15,8 @@ export function GraphInfoComponents({ offset, field, width, DB, average }) {
       </div>
       <ArcGraphComponents
         offset={offset}
-        DB={DB}
-        field={field}
         average={average}
+        currentHover={currentHover}
       />
     </div>
   );

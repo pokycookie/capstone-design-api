@@ -15,11 +15,9 @@ export const DashboardComponents = () => {
   const [DB, setDB] = useState();
   const [location, setLocation] = useState(101);
   const [startDate, setStartDate] = useState(
-    moment(new Date()).add(9, "h").subtract(1, "months").toISOString()
+    moment(new Date()).subtract(1, "months").toISOString()
   );
-  const [endDate, setEndDate] = useState(
-    moment(new Date()).add(9, "h").toISOString()
-  );
+  const [endDate, setEndDate] = useState(moment(new Date()).toISOString());
   const [graphCount, setGraphCount] = useState(30);
 
   const getDB = (params) => {
@@ -41,6 +39,8 @@ export const DashboardComponents = () => {
 
   useEffect(() => {
     getDB(query);
+    console.log(new Date().toISOString());
+    // eslint-disable-next-line
   }, [startDate, endDate, location]);
 
   return (

@@ -1,15 +1,21 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
 
-export function ArcGraphComponents({ offset, DB, field, average }) {
+export function ArcGraphComponents({ offset, average, currentHover }) {
   const CX = 175;
   const CY = 150;
 
   const [percent, setPercent] = useState(0);
-  const [averagePos, setAveragePos] = useState([0, 0]);
+  const [offsetPos, setOffsetPos] = useState([0, 0]);
+  const [dataPos, setDataPos] = useState([0, 0]);
 
   const offsetRadius = 105;
   const offsetCircum = 2 * offsetRadius * Math.PI;
   const offsetLength = 3 * (offsetCircum / 4) * percent; // Max: 660
+
+  const dataRadius = 120;
+  const dataCircum = 2 * dataRadius * Math.PI;
+  const dataLength = 3 * (dataCircum / 4) * (currentHover.value / 1000);
 
   // offset.y: 0 ~ 299
   useEffect(() => {
@@ -27,30 +33,72 @@ export function ArcGraphComponents({ offset, DB, field, average }) {
       const deg = offset.y * 0.9 - 135;
       const x = CX - radius * Math.sin((deg * Math.PI) / 180);
       const y = CY - radius * Math.cos((deg * Math.PI) / 180);
-      setAveragePos(new Array(x, y));
+      setOffsetPos([x, y]);
     } else {
       const deg = 299 * 0.9 - 135;
       const x = CX - radius * Math.sin((deg * Math.PI) / 180);
       const y = CY - radius * Math.cos((deg * Math.PI) / 180);
-      setAveragePos(new Array(x, y));
+      setOffsetPos([x, y]);
     }
-  }, [average, offset]);
+  }, [offset]);
+
+  useEffect(() => {
+    const radius = 130;
+    if (typeof currentHover.value === "number") {
+      const deg = -(currentHover.value / 1000) * 270 + 135;
+      const x = CX - radius * Math.sin((deg * Math.PI) / 180);
+      const y = CY - radius * Math.cos((deg * Math.PI) / 180);
+      setDataPos([x, y]);
+    } else {
+      const deg = 299 * 0.9 - 135;
+      const x = CX - radius * Math.sin((deg * Math.PI) / 180);
+      const y = CY - radius * Math.cos((deg * Math.PI) / 180);
+      setDataPos([x, y]);
+    }
+  }, [currentHover]);
 
   return (
     <div className="arcGraphArea">
+      <svg width={350} height={300} className="arcGraphSVG">
+        <circle
+          cx={CX}
+          cy={CY}
+          r={145}
+          fill="#222831"
+          stroke="white"
+          strokeWidth={5}
+        />
+        <circle
+          cx={CX}
+          cy={CY}
+          r={138}
+          fill="none"
+          stroke="white"
+          strokeWidth={2}
+          strokeDasharray="5"
+        />
+        <circle
+          cx={CX}
+          cy={CY}
+          r={93}
+          fill="none"
+          stroke="white"
+          strokeWidth={2}
+          strokeDasharray="5"
+        />
+      </svg>
       <svg
         width={350}
         height={300}
         className="arcGraphSVG"
         style={{ transform: "rotate(135deg)" }}
       >
-        {/* Background */}
         <circle
           cx={CX}
           cy={CY}
           r={120}
           fill="none"
-          stroke="#f2f2f2"
+          stroke="#FFC7C7"
           strokeWidth={20}
           strokeDasharray={2 * 120 * Math.PI}
           strokeDashoffset={(2 * 120 * Math.PI) / 4}
@@ -58,23 +106,22 @@ export function ArcGraphComponents({ offset, DB, field, average }) {
         <circle
           cx={CX}
           cy={CY}
-          r={108}
+          r={106}
           fill="none"
-          stroke="#1b2433"
-          strokeWidth={16}
-          strokeDasharray={2 * 108 * Math.PI}
-          strokeDashoffset={(2 * 108 * Math.PI) / 4}
+          stroke="#222831"
+          strokeWidth={8}
+          strokeDasharray={2 * 106 * Math.PI}
+          strokeDashoffset={(2 * 106 * Math.PI) / 4}
         />
-        {/* Data */}
         <circle
           cx={CX}
           cy={CY}
-          r={120}
+          r={dataRadius}
           fill="none"
-          stroke="#3e497a"
+          stroke="#F38181"
           strokeWidth={20}
-          strokeDasharray={2 * 120 * Math.PI}
-          strokeDashoffset={(2 * 120 * Math.PI) / 4}
+          strokeDasharray={dataCircum}
+          strokeDashoffset={dataCircum - dataLength}
         />
         <circle
           cx={CX}
@@ -86,25 +133,56 @@ export function ArcGraphComponents({ offset, DB, field, average }) {
           strokeDasharray={offsetCircum}
           strokeDashoffset={offsetCircum - offsetLength}
         />
-        <circle cx={CX} cy={CY} r={5} fill="#1b2433" />
       </svg>
-      <svg width={350} height={300}>
+      <svg width={350} height={300} className="arcGraphSVG">
         <line
           x1={CX}
           y1={CY}
-          x2={averagePos[0]}
-          y2={averagePos[1]}
+          x2={dataPos[0]}
+          y2={dataPos[1]}
+          stroke="#F38181"
+          strokeWidth={2}
+        />
+        <line
+          x1={CX}
+          y1={CY}
+          x2={offsetPos[0]}
+          y2={offsetPos[1]}
           stroke="#e84545"
           strokeWidth={2}
         />
+        <circle cx={CX} cy={CY} r={5} fill="#e84545" />
         <text
           x={CX}
-          y={CY + 50}
+          y={CY + 30}
           textAnchor="middle"
-          fontSize={20}
+          fontSize={14}
           fontWeight={600}
+          fill="white"
         >
           {offset.y !== false ? parseInt((299 - offset.y) * 3.333) : 0}
+        </text>
+        <text
+          x={CX}
+          y={CY + 70}
+          textAnchor="middle"
+          fontSize={24}
+          fontWeight={600}
+          fill="white"
+        >
+          {currentHover.value !== false ? currentHover.value : 0}
+        </text>
+        <text
+          x={CX}
+          y={CY + 115}
+          textAnchor="middle"
+          fontSize={12}
+          fontWeight={600}
+          fill="white"
+        >
+          {currentHover.updated !== false
+            ? moment(currentHover.updated).format("YYYY-MM-DD HH:mm")
+            : ""}
         </text>
       </svg>
     </div>
