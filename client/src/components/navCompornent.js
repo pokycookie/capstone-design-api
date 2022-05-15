@@ -29,11 +29,11 @@ export function NavComponents(props) {
     <div className="navArea">
       <div className="profileArea">
         <div className="profile">
-          <img
-            src={props.login.image}
+          <div
+            // src={props.login.image}
             className="userImg"
             // onError={onImgError}
-          />
+          ></div>
           <div className="userNicknameArea">
             <div className="userNickname">
               {props.login === false ? "Login" : props.login.nickname}
