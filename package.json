@@ -33,6 +33,7 @@
     "express": "^4.17.3",
     "express-session": "^1.17.2",
     "helmet": "^5.0.2",
+    "helmet-csp": "^3.4.0",
     "moment": "^2.29.3",
     "mongoose": "^6.3.0",
     "passport": "^0.5.2",
