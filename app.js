@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: false }));
 //       imgSrc: ["'self'", "'unsafe-inline'"],
 //     },
 //   })
-);
+// );
 
 // Passport JS
 app.use(
