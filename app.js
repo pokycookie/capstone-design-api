@@ -36,7 +36,11 @@ app.use(
   csp({
     directives: {
       defaultSrc: ["'self'"],
-      imgSrc: ["'self'"],
+      imgSrc: [
+        "'self'",
+        ,
+        "'sha256-MBVp6JYxbC/wICelYC6eULCRpgi9kGezXXSaq/TS2+I='",
+      ],
     },
   })
 );
