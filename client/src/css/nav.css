@@ -43,6 +43,7 @@
     #fad0c4 99%,
     #fad0c4 100%
   );
+  outline: none;
 }
 .profileArea .userNicknameArea {
   grid-area: nickname;

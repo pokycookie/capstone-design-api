@@ -6,7 +6,7 @@ const session = require("express-session");
 const passport = require("passport");
 const passportConfig = require("./passport");
 const { default: helmet } = require("helmet");
-const { encrypt } = require("./crypto");
+const { encrypt, decrypt } = require("./crypto");
 const Data = require("./models/dataModel");
 const User = require("./models/userModel");
 const History = require("./models/historyModel");
@@ -175,7 +175,6 @@ app.get("/history", checkLogin, async (req, res) => {
   });
   res.json(history);
 });
-
 app.post("/history", checkLogin, (req, res) => {
   const content = req.body.content;
   const year = req.body.year;
@@ -199,6 +198,88 @@ app.post("/history", checkLogin, (req, res) => {
     .catch((err) => {
       console.error(err);
     });
+});
+
+app.get("/nickname/:id", checkLogin, (req, res) => {
+  const id = req.params.id;
+
+  User.findById(id)
+    .then((result) => {
+      res.status(200).json(result.nickname);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+app.post("/nickname", checkLogin, (req, res) => {
+  const nickname = req.body.nickname;
+  const id = req.body.id;
+
+  User.findByIdAndUpdate(id, { nickname })
+    .then(() => {
+      res.status(200).send("UPDATED");
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
+app.get("/image/:id", checkLogin, (req, res) => {
+  const id = req.params.id;
+
+  User.findById(id)
+    .then((result) => {
+      res.status(200).json(result.image);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+app.post("/image", checkLogin, (req, res) => {
+  const image = req.body.image;
+  const id = req.body.id;
+
+  User.findByIdAndUpdate(id, { image })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(400).send(err);
+    });
+});
+
+app.post("/password", checkLogin, async (req, res) => {
+  const id = req.body.id;
+  const password = req.body.password;
+  const newPassword = req.body.newPW;
+
+  try {
+    const user = await User.findById(id);
+    const key = await decrypt(user.salt, password);
+    if (user.key === key) {
+      const newPW = await encrypt(newPassword);
+      User.findByIdAndUpdate(id, { key: newPW.key, salt: newPW.salt })
+        .then(() => {
+          res.status(200).json({
+            original: {
+              key: user.key,
+              salt: user.salt,
+            },
+            updated: {
+              key: newPW.key,
+              salt: newPW.salt,
+            },
+          });
+        })
+        .catch((err) => {
+          res.status(400).send(err);
+        });
+    } else {
+      res.status(200).send("incorrect");
+    }
+  } catch (err) {
+    res.status(400).send(err);
+  }
 });
 
 // API Request

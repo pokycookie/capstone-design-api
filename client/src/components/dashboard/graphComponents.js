@@ -107,6 +107,14 @@ export const GraphComponents = ({ DB, field }) => {
 
   return (
     <div className="graphArea">
+      <GraphInfoComponents
+        width={INFO_WIDTH}
+        offset={offset}
+        DB={DB}
+        field={field}
+        average={average}
+        currentHover={currentHover}
+      />
       <div className="graph">
         <div className="graphArea-title">
           <p style={{ textTransform: "uppercase" }}>{`${field} GRAPH`}</p>
@@ -248,14 +256,6 @@ export const GraphComponents = ({ DB, field }) => {
           </svg>
         </div>
       </div>
-      <GraphInfoComponents
-        width={INFO_WIDTH}
-        offset={offset}
-        DB={DB}
-        field={field}
-        average={average}
-        currentHover={currentHover}
-      />
     </div>
   );
 };

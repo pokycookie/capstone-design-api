@@ -8,6 +8,7 @@
 @import "./history.css";
 @import "./graph.css";
 @import "./dashboard.css";
+@import "./editProfile.css";
 
 html {
   width: 100%;

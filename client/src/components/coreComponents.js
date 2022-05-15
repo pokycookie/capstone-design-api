@@ -5,6 +5,7 @@ import { BasicDBComponents } from "./database/basicDBComponents";
 import { PostDBComponents } from "./database/postDBComponents";
 import { HistoryComponents } from "./history/historyComponents";
 import { DashboardComponents } from "./dashboard/dashboardComponents";
+import { EditProfileComponents } from "./profile/editProfileComponents";
 
 export function CoreComponents(props) {
   const [DB, setDB] = useState([]);
@@ -94,6 +95,12 @@ export function CoreComponents(props) {
           <HistoryComponents
             login={props.login}
             setUpdateHistory={props.setUpdateHistory}
+          />
+        ) : null}
+        {props.menu === "editProfile" ? (
+          <EditProfileComponents
+            login={props.login}
+            setLogin={props.setLogin}
           />
         ) : null}
         {updateDataModal === true ? (

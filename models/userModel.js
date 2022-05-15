@@ -44,6 +44,12 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
+  location: {
+    type: Number,
+  },
+  image: {
+    type: String,
+  },
 });
 
 userSchema.methods.comparePassword = async function (salt, inputPW, callback) {

@@ -20,11 +20,20 @@ const translateLevel = (level) => {
 export function NavComponents(props) {
   const [userMenu, setUserMenu] = useState(false);
 
+  const onImgError = ({ target }) => {
+    target.src =
+      "https://shepherdswellcoldred-pc.gov.uk/wp-content/uploads/2020/08/male_default_councillor_image.jpg";
+  };
+
   return (
     <div className="navArea">
       <div className="profileArea">
         <div className="profile">
-          <div className="userImg"></div>
+          <img
+            src={props.login.image}
+            className="userImg"
+            onError={onImgError}
+          />
           <div className="userNicknameArea">
             <div className="userNickname">
               {props.login === false ? "Login" : props.login.nickname}
@@ -54,10 +63,12 @@ export function NavComponents(props) {
         }
       >
         <p className="userMenuAreaTitle">USER MENU</p>
-        <button>
-          <div>
-            <p>Edit Profile</p>
-          </div>
+        <button
+          onClick={() => {
+            props.setMenu("editProfile");
+          }}
+        >
+          <p>Edit Profile</p>
         </button>
         {props.login !== false && props.login.securityLevel === 0 ? (
           <button>

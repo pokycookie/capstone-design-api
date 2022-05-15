@@ -1,0 +1,106 @@
+.editProfileComponents {
+  width: 100%;
+  height: 900px;
+  background-color: white;
+  box-sizing: border-box;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-y: auto;
+}
+.editProfileComponents::-webkit-scrollbar {
+  width: 10px;
+}
+.editProfileComponents::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #1b2433;
+}
+
+.editProfileComponents .editProfile-area {
+  width: 100%;
+  height: auto;
+  border-bottom: 20px solid #f2f2f2;
+  box-sizing: border-box;
+}
+.editProfileComponents .editProfile-area:last-child {
+  border-bottom: 0px;
+}
+
+.editProfileComponents .editProfile-nav {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 3px solid #f2f2f2;
+  padding: 0px 45px 0px 45px;
+  box-sizing: border-box;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.editProfileComponents .editProfile-contents {
+  padding: 20px 45px 20px 45px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.editProfileComponents .editProfile-contents input {
+  width: 300px;
+  height: 30px;
+  text-align: right;
+  padding: 0px 5px 0px 5px;
+  margin-right: 5px;
+  box-sizing: border-box;
+  font-size: 12px;
+}
+
+.editProfileComponents .editProfile-btn {
+  width: 100px;
+  height: 30px;
+  margin: 0px 5px 0px 5px;
+  cursor: pointer;
+  border: none;
+  background-color: #1b2433;
+  color: white;
+  border-radius: 5px;
+  transition: all ease-out 0.2s;
+  box-sizing: border-box;
+}
+.editProfileComponents .editProfile-btn:hover {
+  background-color: #3e497a;
+}
+
+.editProfileComponents .editProfile-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin-bottom: 5px;
+}
+.editProfileComponents .editProfile-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.editProfileComponents .editProfile-text {
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.editProfile-column.errorMsg {
+  width: 300px;
+  height: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  font-size: 10px;
+  font-weight: 600;
+  color: red;
+}
