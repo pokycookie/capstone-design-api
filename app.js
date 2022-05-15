@@ -35,8 +35,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   csp({
     directives: {
-      defaultSrc: ["'https://*'"],
-      imgSrc: ["'https://*'"],
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'"],
     },
   })
 );
