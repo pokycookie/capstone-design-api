@@ -35,12 +35,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   csp({
     directives: {
-      defaultSrc: ["'self'"],
-      imgSrc: [
-        "'self'",
-        ,
-        "'sha256-MBVp6JYxbC/wICelYC6eULCRpgi9kGezXXSaq/TS2+I='",
-      ],
+      defaultSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "'unsafe-inline'"],
     },
   })
 );
