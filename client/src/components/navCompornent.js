@@ -20,10 +20,10 @@ const translateLevel = (level) => {
 export function NavComponents(props) {
   const [userMenu, setUserMenu] = useState(false);
 
-  const onImgError = ({ target }) => {
-    target.src =
-      "https://shepherdswellcoldred-pc.gov.uk/wp-content/uploads/2020/08/male_default_councillor_image.jpg";
-  };
+  // const onImgError = ({ target }) => {
+  //   target.src =
+  //     "https://shepherdswellcoldred-pc.gov.uk/wp-content/uploads/2020/08/male_default_councillor_image.jpg";
+  // };
 
   return (
     <div className="navArea">
@@ -32,7 +32,7 @@ export function NavComponents(props) {
           <img
             src={props.login.image}
             className="userImg"
-            onError={onImgError}
+            // onError={onImgError}
           />
           <div className="userNicknameArea">
             <div className="userNickname">
