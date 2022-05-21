@@ -1,4 +1,4 @@
-const { useState, useEffect, useRef } = require("react");
+const { useState, useEffect } = require("react");
 
 export function useWindow(widthSize, heightSize) {
   const [windowSize, setWindowSize] = useState({

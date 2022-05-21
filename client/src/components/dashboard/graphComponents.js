@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { useOffset, useWindow } from "../../hooks";
 import { GraphInfoComponents } from "./graphInfoComponents";
@@ -5,7 +6,6 @@ import { GraphInfoComponents } from "./graphInfoComponents";
 const feildArray = ["sound", "vibration"];
 
 const defaultSet = new Set();
-defaultSet.add("bar");
 defaultSet.add("line");
 defaultSet.add("dot");
 
@@ -33,6 +33,7 @@ export const GraphComponents = ({ DB, field }) => {
   const graphHeight = 0.3;
   const svgWidth = windowSize.width < minWidth ? minWidth : maxWidth;
 
+  // make polyline svg path
   useEffect(() => {
     if (Array.isArray(DB)) {
       let tempString = "";
@@ -53,6 +54,7 @@ export const GraphComponents = ({ DB, field }) => {
     // eslint-disable-next-line
   }, [polylinePoints, DB, windowSize, field]);
 
+  // set average value
   useEffect(() => {
     if (Array.isArray(DB) && DB.length > 0) {
       let average;
@@ -90,43 +92,38 @@ export const GraphComponents = ({ DB, field }) => {
     }
   };
 
-  const mouseHover = (element, index) => {
-    if (
-      currentHover.value !== element[field] ||
-      currentHover.updated !== element.updated ||
-      currentHover.index !== index
-    ) {
-      const tempObj = {
-        value: element[field],
-        updated: element.updated,
-        index,
-      };
-      setCurrentHover(tempObj);
-    }
-  };
-
   return (
     <div className="graphArea">
       <GraphInfoComponents
         width={INFO_WIDTH}
         offset={offset}
-        DB={DB}
-        field={field}
         average={average}
-        currentHover={currentHover}
+        focusData={
+          Array.isArray(DB)
+            ? {
+                value: DB[parseInt(offset.x / (svgWidth / DB.length))][field],
+                updated:
+                  DB[parseInt(offset.x / (svgWidth / DB.length))].updated,
+              }
+            : {
+                value: 0,
+                updated: 0,
+              }
+        }
       />
+
       <div className="graph">
         <div className="graphArea-title">
           <p style={{ textTransform: "uppercase" }}>{`${field} GRAPH`}</p>
           <div className="optionArea">
-            <input
-              type="checkbox"
-              defaultChecked="true"
-              onChange={({ target }) => {
-                setType(target, "bar");
-              }}
-            />
-            <p>Bar</p>
+            {/* <input
+                  type="checkbox"
+                  defaultChecked="false"
+                  onChange={({ target }) => {
+                    setType(target, "bar");
+                  }}
+                />
+                <p>Bar</p> */}
             <input
               type="checkbox"
               defaultChecked="true"
@@ -152,82 +149,111 @@ export const GraphComponents = ({ DB, field }) => {
             <p>Average Line</p>
           </div>
         </div>
-        <div className="graphComponents">
-          <svg width={svgWidth} height={svgHeight} ref={DOM}>
-            {Array.isArray(DB) && graphType.has("bar")
-              ? DB.map((element, index) => {
-                  return (
-                    <rect
-                      className="svgGraph"
-                      key={index}
-                      x={0 + (index * svgWidth) / DB.length}
-                      y={svgHeight - element[field] * graphHeight}
-                      width={svgWidth / DB.length}
-                      height={element[field] * graphHeight}
-                      fill="#3e497a"
-                      opacity={0.8}
-                    />
-                  );
-                })
-              : null}
-            {Array.isArray(DB)
-              ? DB.map((element, index) => {
-                  return (
-                    <rect
-                      className="svgGraph"
-                      key={index}
-                      x={0 + (index * svgWidth) / DB.length}
-                      y={0}
-                      width={svgWidth / DB.length}
-                      height={windowSize.height * graphHeight - 40}
-                      opacity={0}
-                      onMouseEnter={() => {
-                        mouseHover(element, index);
-                      }}
-                    />
-                  );
-                })
-              : null}
+        <div className="graphComponents" ref={DOM}>
+          {offset.x !== false && offset.y !== false && Array.isArray(DB) ? (
+            <div
+              className="graphDetails"
+              style={{
+                position: "absolute",
+                top: parseInt(
+                  svgHeight -
+                    DB[parseInt(offset.x / (svgWidth / DB.length))][field] *
+                      graphHeight -
+                    50
+                ),
+                left:
+                  (svgWidth / DB.length) *
+                    parseInt(offset.x / (svgWidth / DB.length)) +
+                  svgWidth / (2 * DB.length) -
+                  50,
+              }}
+            >
+              <p className="graphDetails-value">
+                {DB[parseInt(offset.x / (svgWidth / DB.length))][field]}
+              </p>
+              <p className="graphDetails-updated">
+                {moment(
+                  DB[parseInt(offset.x / (svgWidth / DB.length))].updated
+                ).format("YYYY-MM-DD HH:mm")}
+              </p>
+            </div>
+          ) : null}
+          <svg width={svgWidth} height={svgHeight}>
+            {/* {Array.isArray(DB) && graphType.has("bar")
+                  ? DB.map((element, index) => {
+                      return (
+                        <rect
+                          className="svgGraph"
+                          key={index}
+                          x={0 + (index * svgWidth) / DB.length}
+                          y={svgHeight - element[field] * graphHeight}
+                          width={svgWidth / DB.length}
+                          height={element[field] * graphHeight}
+                          fill="#3e497a"
+                          opacity={0.8}
+                        />
+                      );
+                    })
+                  : null} */}
             {Array.isArray(DB) && graphType.has("line") ? (
               <polyline
                 points={polylinePoints}
                 fill="none"
-                strokeWidth={3}
+                strokeWidth={2}
                 stroke="#1b2433"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 opacity={0.8}
               />
             ) : null}
-            {Array.isArray(DB) && graphType.has("dot")
-              ? DB.map((element, index) => {
-                  return (
-                    <circle
-                      className="svgGraph circle"
-                      key={index}
-                      cx={parseInt(
-                        (index * svgWidth) / DB.length +
-                          svgWidth / DB.length / 2
-                      )}
-                      cy={parseInt(svgHeight - element[field] * graphHeight)}
-                      r={3}
-                      fill="#1b2433"
-                      opacity={0.8}
-                    />
-                  );
-                })
-              : null}
+            <g>
+              {Array.isArray(DB) && graphType.has("dot")
+                ? DB.map((element, index) => {
+                    return (
+                      <circle
+                        className="svgGraph circle"
+                        key={index}
+                        cx={parseInt(
+                          (index * svgWidth) / DB.length +
+                            svgWidth / DB.length / 2
+                        )}
+                        cy={parseInt(svgHeight - element[field] * graphHeight)}
+                        r={3}
+                        fill={
+                          parseInt(offset.x / (svgWidth / DB.length)) === index
+                            ? "#1b2433"
+                            : "white"
+                        }
+                        stroke="#1b2433"
+                        strokeWidth={1.5}
+                      />
+                    );
+                  })
+                : null}
+            </g>
             {offset.x !== false && offset.y !== false ? (
-              <line
-                x1={0}
-                y1={offset.y}
-                x2={offset.x}
-                y2={offset.y}
-                stroke="#1b2433"
-                strokeDasharray="5 10"
-                strokeWidth={2}
-                opacity={0.5}
-              />
+              <g>
+                <line
+                  x1={0}
+                  y1={offset.y}
+                  x2={offset.x}
+                  y2={offset.y}
+                  stroke="#1b2433"
+                  strokeDasharray="5 10"
+                  strokeWidth={2}
+                  opacity={0.5}
+                />
+                <line
+                  x1={offset.x}
+                  y1={svgHeight}
+                  x2={offset.x}
+                  y2={offset.y}
+                  stroke="#1b2433"
+                  strokeDasharray="5 10"
+                  strokeWidth={2}
+                  opacity={0.5}
+                />
+              </g>
             ) : null}
             {typeof average === "number" && averageLine === true ? (
               <line
@@ -239,18 +265,6 @@ export const GraphComponents = ({ DB, field }) => {
                 strokeDasharray="5"
                 strokeWidth={2}
                 opacity={0.7}
-              />
-            ) : null}
-            {offset.x !== false && offset.y !== false ? (
-              <line
-                x1={offset.x}
-                y1={svgHeight}
-                x2={offset.x}
-                y2={offset.y}
-                stroke="#1b2433"
-                strokeDasharray="5 10"
-                strokeWidth={2}
-                opacity={0.5}
               />
             ) : null}
           </svg>

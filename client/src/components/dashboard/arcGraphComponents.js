@@ -1,7 +1,7 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
 
-export function ArcGraphComponents({ offset, average, currentHover }) {
+export function ArcGraphComponents({ offset, average, focusData }) {
   const CX = 175;
   const CY = 150;
 
@@ -15,7 +15,7 @@ export function ArcGraphComponents({ offset, average, currentHover }) {
 
   const dataRadius = 120;
   const dataCircum = 2 * dataRadius * Math.PI;
-  const dataLength = 3 * (dataCircum / 4) * (currentHover.value / 1000);
+  const dataLength = 3 * (dataCircum / 4) * (focusData.value / 1000);
 
   // offset.y: 0 ~ 299
   useEffect(() => {
@@ -44,8 +44,8 @@ export function ArcGraphComponents({ offset, average, currentHover }) {
 
   useEffect(() => {
     const radius = 130;
-    if (typeof currentHover.value === "number") {
-      const deg = -(currentHover.value / 1000) * 270 + 135;
+    if (typeof focusData.value === "number") {
+      const deg = -(focusData.value / 1000) * 270 + 135;
       const x = CX - radius * Math.sin((deg * Math.PI) / 180);
       const y = CY - radius * Math.cos((deg * Math.PI) / 180);
       setDataPos([x, y]);
@@ -55,7 +55,7 @@ export function ArcGraphComponents({ offset, average, currentHover }) {
       const y = CY - radius * Math.cos((deg * Math.PI) / 180);
       setDataPos([x, y]);
     }
-  }, [currentHover]);
+  }, [focusData]);
 
   return (
     <div className="arcGraphArea">
@@ -170,7 +170,7 @@ export function ArcGraphComponents({ offset, average, currentHover }) {
           fontWeight={600}
           fill="white"
         >
-          {currentHover.value !== false ? currentHover.value : 0}
+          {focusData.value !== false ? focusData.value : 0}
         </text>
         <text
           x={CX}
@@ -180,8 +180,8 @@ export function ArcGraphComponents({ offset, average, currentHover }) {
           fontWeight={600}
           fill="white"
         >
-          {currentHover.updated !== false
-            ? moment(currentHover.updated).format("YYYY-MM-DD HH:mm")
+          {focusData.updated !== false
+            ? moment(focusData.updated).format("YYYY-MM-DD HH:mm")
             : ""}
         </text>
       </svg>
