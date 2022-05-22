@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CheckBox } from "./checkBox";
 import { SortList } from "./sortList";
 import { FilterList } from "./filterList";
+import moment from "moment";
 
 export function BasicDBComponents(props) {
   const [isAllCheck, setAllCheck] = useState(false);
@@ -284,7 +285,9 @@ export function BasicDBComponents(props) {
                   <p className="dbElement">{element.location}</p>
                   <p className="dbElement">{element.sound}</p>
                   <p className="dbElement">{element.vibration}</p>
-                  <p className="dbElement">{element.updated}</p>
+                  <p className="dbElement">
+                    {moment(element.updated).format("YYYY.MM.DD HH:mm")}
+                  </p>
                 </li>
               );
             })

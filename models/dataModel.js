@@ -21,6 +21,12 @@ const dataSchema = new Schema({
     type: Date,
     required: true,
   },
+  getSound: {
+    type: Number,
+  },
+  postSound: {
+    type: Number,
+  },
 });
 
 module.exports = mongoose.model("Data", dataSchema);

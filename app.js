@@ -12,7 +12,6 @@ const User = require("./models/userModel");
 const History = require("./models/historyModel");
 const moment = require("moment");
 const odata = require("./odata");
-// const csp = require("helmet-csp");
 
 dotenv.config();
 const app = express();
@@ -32,14 +31,6 @@ try {
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use(
-//   csp({
-//     directives: {
-//       defaultSrc: ["'self'", "'unsafe-inline'"],
-//       imgSrc: ["'self'", "'unsafe-inline'"],
-//     },
-//   })
-// );
 
 // Passport JS
 app.use(
@@ -301,28 +292,46 @@ app.get("/api/data", checkLogin, (req, res) => {
     });
 });
 
-app.post("/api/data", (req, res) => {
+app.post("/api/data", async (req, res) => {
   if (req.body != undefined) {
     if (req.body.auth === process.env.AUTH_KEY) {
-      const location = req.body.location;
-      const sound = req.body.sound;
-      const vibration = req.body.vibration;
-      const updated = moment(new Date()).add(9, "h");
+      const location = parseInt(req.body.location);
+      const sound = parseFloat(req.body.sound);
+      const vibration = parseFloat(req.body.vibration);
+      const updated = new Date();
       const newData = new Data({ location, sound, vibration, updated });
 
-      newData
-        .save()
-        .then(() => {
-          console.log("Upload OK");
-          res.status(200).json({
-            status: "OK",
-            data: req.body,
-          });
-        })
-        .catch((err) => {
-          console.error("DB error");
-          res.status(400).json(err);
+      const duplicateData = await Data.findOne({
+        location,
+        updated: {
+          $gte: new Date(moment(updated).startOf("minute")),
+          $lt: new Date(moment(updated).startOf("minute").add(1, "m")),
+        },
+      });
+
+      console.log(duplicateData === null);
+      if (duplicateData !== null) {
+        await Data.findByIdAndUpdate(duplicateData._id, {
+          sound: (parseFloat(duplicateData.sound) + sound) / 2,
+          vibration: (parseFloat(duplicateData.vibration) + vibration) / 2,
+          updated,
         });
+        console.log("Update OK");
+      } else {
+        newData
+          .save()
+          .then(() => {
+            console.log("Upload OK");
+            res.status(200).json({
+              status: "OK",
+              data: req.body,
+            });
+          })
+          .catch((err) => {
+            console.error("DB error");
+            res.status(400).json(err);
+          });
+      }
     } else {
       console.log("Incorrect auth");
       res.status(403);

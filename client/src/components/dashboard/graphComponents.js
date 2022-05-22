@@ -97,9 +97,13 @@ export const GraphComponents = ({ DB, field }) => {
           Array.isArray(DB) && DB.length > 0
             ? {
                 value:
-                  DB[parseInt(offset.x / (svgWidth / DB.length))][field] || 0,
+                  offset.x === false
+                    ? 0
+                    : DB[parseInt(offset.x / (svgWidth / DB.length))][field],
                 updated:
-                  DB[parseInt(offset.x / (svgWidth / DB.length))].updated || 0,
+                  offset.x === false
+                    ? 0
+                    : DB[parseInt(offset.x / (svgWidth / DB.length))].updated,
               }
             : {
                 value: 0,
@@ -146,7 +150,10 @@ export const GraphComponents = ({ DB, field }) => {
           </div>
         </div>
         <div className="graphComponents" ref={DOM}>
-          {offset.x !== false && offset.y !== false && Array.isArray(DB) ? (
+          {offset.x !== false &&
+          offset.y !== false &&
+          Array.isArray(DB) &&
+          DB.length > 0 ? (
             <div
               className="graphDetails"
               style={{
@@ -155,7 +162,7 @@ export const GraphComponents = ({ DB, field }) => {
                   svgHeight -
                     DB[parseInt(offset.x / (svgWidth / DB.length))][field] *
                       graphHeight -
-                    50
+                    60
                 ),
                 left:
                   (svgWidth / DB.length) *
@@ -199,7 +206,6 @@ export const GraphComponents = ({ DB, field }) => {
                 stroke="#1b2433"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                opacity={0.8}
               />
             ) : null}
             <g>
@@ -216,7 +222,8 @@ export const GraphComponents = ({ DB, field }) => {
                         cy={parseInt(svgHeight - element[field] * graphHeight)}
                         r={3}
                         fill={
-                          parseInt(offset.x / (svgWidth / DB.length)) === index
+                          parseInt(offset.x / (svgWidth / DB.length)) ===
+                            index && offset.x !== false
                             ? "#1b2433"
                             : "white"
                         }
@@ -227,27 +234,38 @@ export const GraphComponents = ({ DB, field }) => {
                   })
                 : null}
             </g>
-            {offset.x !== false && offset.y !== false ? (
+            {offset.x !== false &&
+            offset.y !== false &&
+            Array.isArray(DB) &&
+            DB.length > 0 ? (
               <g>
                 <line
-                  x1={0}
+                  x1="0"
                   y1={offset.y}
-                  x2={offset.x}
+                  x2={svgWidth}
                   y2={offset.y}
-                  stroke="#1b2433"
-                  strokeDasharray="5 10"
-                  strokeWidth={2}
-                  opacity={0.5}
+                  stroke="#e84545"
+                  strokeDasharray="5"
+                  strokeWidth="2"
                 />
                 <line
-                  x1={offset.x}
+                  x1={
+                    (svgWidth / DB.length) *
+                      parseInt(offset.x / (svgWidth / DB.length)) +
+                    svgWidth / (2 * DB.length) -
+                    1
+                  }
                   y1={svgHeight}
-                  x2={offset.x}
-                  y2={offset.y}
+                  x2={
+                    (svgWidth / DB.length) *
+                      parseInt(offset.x / (svgWidth / DB.length)) +
+                    svgWidth / (2 * DB.length) -
+                    1
+                  }
+                  y2={0}
                   stroke="#1b2433"
-                  strokeDasharray="5 10"
-                  strokeWidth={2}
-                  opacity={0.5}
+                  strokeDasharray="5"
+                  strokeWidth="1"
                 />
               </g>
             ) : null}
@@ -260,7 +278,6 @@ export const GraphComponents = ({ DB, field }) => {
                 stroke="#e84545"
                 strokeDasharray="5"
                 strokeWidth={2}
-                opacity={0.7}
               />
             ) : null}
           </svg>
