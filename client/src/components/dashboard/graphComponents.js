@@ -17,11 +17,6 @@ export const GraphComponents = ({ DB, field }) => {
   const [average, setAverage] = useState(0);
   const [averageLine, setAverageLine] = useState(false);
   const [graphType, setGraphType] = useState(new Set(defaultSet));
-  const [currentHover, setCurrentHover] = useState({
-    value: 0,
-    index: 0,
-    updated: new Date(),
-  });
 
   const DOM = useRef();
   const offset = useOffset(DOM);
@@ -99,11 +94,12 @@ export const GraphComponents = ({ DB, field }) => {
         offset={offset}
         average={average}
         focusData={
-          Array.isArray(DB)
+          Array.isArray(DB) && DB.length > 0
             ? {
-                value: DB[parseInt(offset.x / (svgWidth / DB.length))][field],
+                value:
+                  DB[parseInt(offset.x / (svgWidth / DB.length))][field] || 0,
                 updated:
-                  DB[parseInt(offset.x / (svgWidth / DB.length))].updated,
+                  DB[parseInt(offset.x / (svgWidth / DB.length))].updated || 0,
               }
             : {
                 value: 0,
