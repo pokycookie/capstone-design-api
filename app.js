@@ -309,7 +309,7 @@ app.post("/api/data", async (req, res) => {
         },
       });
 
-      console.log(duplicateData === null);
+      // Check duplicate data
       if (duplicateData !== null) {
         await Data.findByIdAndUpdate(duplicateData._id, {
           sound: (parseFloat(duplicateData.sound) + sound) / 2,
@@ -318,7 +318,7 @@ app.post("/api/data", async (req, res) => {
         });
         console.log("Update OK");
       } else {
-        newData
+        await newData
           .save()
           .then(() => {
             console.log("Upload OK");
@@ -332,6 +332,31 @@ app.post("/api/data", async (req, res) => {
             res.status(400).json(err);
           });
       }
+
+      // Find Noise Source
+      const tempArr = await Data.find({
+        updated: {
+          $gte: new Date(moment(updated).startOf("minute")),
+          $lt: new Date(moment(updated).startOf("minute").add(1, "m")),
+        },
+      });
+      tempArr.sort((a, b) => b.sound - a.sound);
+
+      await Data.findByIdAndUpdate(tempArr[0]._id, {
+        getSound: 0,
+        postSound: tempArr[0].sound,
+      });
+
+      tempArr.forEach(async (element, index, arr) => {
+        if (index > 0) {
+          await Data.findByIdAndUpdate(element._id, {
+            getSound: arr[0].sound * 0.5, // 0.5 => Noise attenuation factor
+            postSound: 0,
+          });
+        }
+      });
+
+      // Incorrect auth
     } else {
       console.log("Incorrect auth");
       res.status(403);
