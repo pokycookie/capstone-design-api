@@ -261,9 +261,11 @@ export function BasicDBComponents(props) {
             className="checkbox"
           />
         </div>
-        <p className="dbElement dbTitleElement">Location</p>
+        <p className="dbElement dbTitleElement">Room</p>
         <p className="dbElement dbTitleElement">Sound</p>
         <p className="dbElement dbTitleElement">Vibration</p>
+        <p className="dbElement dbTitleElement">낸 소음</p>
+        <p className="dbElement dbTitleElement">받은 소음</p>
         <p className="dbElement dbTitleElement">Updated</p>
       </div>
       <ul className="dbListArea">
@@ -285,6 +287,8 @@ export function BasicDBComponents(props) {
                   <p className="dbElement">{element.location}</p>
                   <p className="dbElement">{element.sound}</p>
                   <p className="dbElement">{element.vibration}</p>
+                  <p className="dbElement">{element.postSound}</p>
+                  <p className="dbElement">{element.getSound}</p>
                   <p className="dbElement">
                     {moment(element.updated).format("YYYY.MM.DD HH:mm")}
                   </p>

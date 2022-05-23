@@ -351,7 +351,7 @@ app.post("/api/data", async (req, res) => {
         if (index > 0) {
           await Data.findByIdAndUpdate(element._id, {
             getSound: arr[0].sound * 0.5, // 0.5 => Noise attenuation factor
-            postSound: 0,
+            postSound: element.sound - arr[0].sound * 0.5,
           });
         }
       });
