@@ -18,7 +18,7 @@ export const DashboardComponents = () => {
     moment(new Date()).subtract(1, "months").toISOString()
   );
   const [endDate, setEndDate] = useState(
-    moment(new Date()).add(1, "m").toISOString()
+    moment(new Date()).add(1, "d").toISOString()
   );
   const [graphCount, setGraphCount] = useState(30);
 
@@ -26,7 +26,7 @@ export const DashboardComponents = () => {
     axios
       .get(`${URI}/api/data`, { params })
       .then((res) => {
-        setDB(res.data);
+        setDB([...res.data]);
         if (Array.isArray(res.data)) {
           setGraphCount(res.data.length > 30 ? 30 : res.data.length);
         }

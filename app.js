@@ -296,8 +296,8 @@ app.post("/api/data", async (req, res) => {
   if (req.body != undefined) {
     if (req.body.auth === process.env.AUTH_KEY) {
       const location = parseInt(req.body.location);
-      const sound = parseFloat(req.body.sound);
-      const vibration = parseFloat(req.body.vibration);
+      const sound = parseInt(req.body.sound);
+      const vibration = parseInt(req.body.vibration);
       const updated = new Date();
       const newData = new Data({ location, sound, vibration, updated });
 
@@ -312,8 +312,8 @@ app.post("/api/data", async (req, res) => {
       // Check duplicate data
       if (duplicateData !== null) {
         await Data.findByIdAndUpdate(duplicateData._id, {
-          sound: (parseFloat(duplicateData.sound) + sound) / 2,
-          vibration: (parseFloat(duplicateData.vibration) + vibration) / 2,
+          sound: (parseInt(duplicateData.sound) + sound) / 2,
+          vibration: (parseInt(duplicateData.vibration) + vibration) / 2,
           updated,
         });
         console.log("Update OK");
