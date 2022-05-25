@@ -15,10 +15,10 @@ export const DashboardComponents = () => {
   const [DB, setDB] = useState();
   const [location, setLocation] = useState(101);
   const [startDate, setStartDate] = useState(
-    moment(new Date()).subtract(1, "months").toISOString()
+    moment(new Date()).subtract(1, "h").toISOString()
   );
   const [endDate, setEndDate] = useState(
-    moment(new Date()).add(1, "d").toISOString()
+    moment(new Date()).add(1, "m").toISOString()
   );
   const [graphCount, setGraphCount] = useState(30);
 
