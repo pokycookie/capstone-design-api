@@ -26,8 +26,8 @@ export const DashboardComponents = () => {
     axios
       .get(`${URI}/api/data`, { params })
       .then((res) => {
-        setDB([...res.data]);
         if (Array.isArray(res.data)) {
+          setDB([...res.data]);
           setGraphCount(res.data.length > 30 ? 30 : res.data.length);
         }
       })
@@ -52,6 +52,7 @@ export const DashboardComponents = () => {
             className="graphBtn refreshBtn"
             onClick={() => {
               getDB(query);
+              setEndDate(moment(new Date()).add(1, "m").toISOString());
             }}
           >
             <FontAwesomeIcon icon={faRotateRight} />

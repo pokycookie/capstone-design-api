@@ -20,7 +20,7 @@ export function FilterList(props) {
         : equal === false && gt === false && lt === false
         ? false
         : option;
-    props.setFilterOption(temp);
+    props.setFilterOption([...temp]);
   }, [props, check, equal, gt, lt, value]);
 
   return (
