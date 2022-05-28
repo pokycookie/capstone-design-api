@@ -1,0 +1,88 @@
+.analyticsComponents .analyticsNav {
+  width: 100%;
+  height: 60px;
+  background-color: white;
+  box-sizing: border-box;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 45px 0px 45px;
+}
+.analyticsComponents .analyticsNav-left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 30px;
+}
+.analyticsComponents .analyticsNav-right {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.analyticsComponents .analyticsNav .graphBtn {
+  width: 100px;
+  height: 30px;
+  margin: 0px 5px 0px 5px;
+  cursor: pointer;
+  border: none;
+  background-color: #1b2433;
+  color: white;
+  border-radius: 5px;
+  transition: all ease-out 0.2s;
+}
+.analyticsComponents .analyticsNav .graphBtn:hover {
+  background-color: #3e497a;
+}
+.analyticsComponents .analyticsNav .graphBtn.refreshBtn {
+  width: 30px;
+}
+.analyticsComponents .analyticsNav .graphLocationInput {
+  width: 200px;
+  height: 30px;
+  box-sizing: border-box;
+  text-align: right;
+  padding: 0px 5px 0px 5px;
+  margin-left: 15px;
+}
+.analyticsComponents .analyticsNav .graphLocationInput.location {
+  width: 120px;
+  margin-left: 0px;
+}
+.analyticsComponents .analyticsNav-left p {
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 5px;
+}
+.analyticsComponents .analyticsNav .graphLocationInput-text {
+  font-size: 11px;
+  font-weight: 600;
+  margin: 0px 0px 0px 5px;
+  white-space: nowrap;
+}
+
+.analyticsComponents .analyticsMain {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.analyticsComponents .analyticsMain-rows {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.analyticsComponents .arcGraphArea {
+  width: 350px;
+  height: 350px;
+  background-color: white;
+  border-radius: 20px;
+  margin-right: 20px;
+  position: relative;
+}

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 
-export function Arc({ x, y, radius, startAngle, endAngle, thickness }) {
+export function Arc({ x, y, radius, startAngle, endAngle, thickness, color }) {
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [endPos, setEndPos] = useState({ x: 0, y: 0 });
   const [startPos2, setStartPos2] = useState({ x: 0, y: 0 });
@@ -60,18 +60,15 @@ export function Arc({ x, y, radius, startAngle, endAngle, thickness }) {
   }, [startAngle, endAngle, flag]);
 
   return (
-    <svg width={500} height={500}>
-      <circle cx={x} cy={y} r="3" />
-      <path
-        d={`M${startPos.x},${startPos.y} A${radius},${radius} 0 ${flag[0]},${
-          flag[1]
-        } ${endPos.x},${endPos.y} L${endPos2.x},${endPos2.y} A${
-          radius - thickness
-        },${radius - thickness} 0 ${flag[0]},${flag[1] === 0 ? 1 : 0} ${
-          startPos2.x
-        },${startPos2.y} Z`}
-        fill="red"
-      />
-    </svg>
+    <path
+      d={`M${startPos.x},${startPos.y} A${radius},${radius} 0 ${flag[0]},${
+        flag[1]
+      } ${endPos.x},${endPos.y} L${endPos2.x},${endPos2.y} A${
+        radius - thickness
+      },${radius - thickness} 0 ${flag[0]},${flag[1] === 0 ? 1 : 0} ${
+        startPos2.x
+      },${startPos2.y} Z`}
+      fill={color}
+    />
   );
 }
