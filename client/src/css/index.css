@@ -10,6 +10,7 @@
 @import "./dashboard.css";
 @import "./editProfile.css";
 @import "./analytics.css";
+@import "./admin.css";
 
 html {
   width: 100%;

@@ -6,8 +6,8 @@ import { PostDBComponents } from "./database/postDBComponents";
 import { HistoryComponents } from "./history/historyComponents";
 import { DashboardComponents } from "./dashboard/dashboardComponents";
 import { EditProfileComponents } from "./profile/editProfileComponents";
-import { Arc } from "./arc";
 import { AnalyticsComponents } from "./analytics/analyticsComponents";
+import { AdminComponents } from "./administrator/adminComponents";
 
 export function CoreComponents(props) {
   const [DB, setDB] = useState([]);
@@ -85,6 +85,7 @@ export function CoreComponents(props) {
       <div className="contentArea">
         {props.menu === "dashboard" ? <DashboardComponents /> : null}
         {props.menu === "analytics" ? <AnalyticsComponents /> : null}
+        {props.menu === "admin" ? <AdminComponents /> : null}
         {props.menu === "database" ? (
           <BasicDBComponents
             DB={DB}

@@ -1,6 +1,6 @@
 import { Arc } from "../arc";
 
-export function AnalyticsGraphArea({ value, reverse }) {
+export function AnalyticsArcGraph({ value, reverse }) {
   const OFFSET = parseInt(Math.random() * 360);
   const ANGLE = isNaN(value)
     ? 0

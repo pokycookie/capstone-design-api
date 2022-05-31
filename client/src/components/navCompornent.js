@@ -104,7 +104,7 @@ export function NavComponents(props) {
           >
             DASHBOARD
           </li>
-          <li
+          {/* <li
             className="menuAreaList"
             onClick={() => {
               props.setMenu("analytics");
@@ -114,7 +114,21 @@ export function NavComponents(props) {
             }
           >
             ANALYTICS
-          </li>
+          </li> */}
+          {props.login.securityLevel < 2 ? (
+            <li
+              className="menuAreaList"
+              onClick={() => {
+                props.setMenu("admin");
+              }}
+              style={
+                props.menu === "admin" ? { backgroundColor: "#3e497a" } : null
+              }
+            >
+              ADMINISTRATOR
+            </li>
+          ) : null}
+
           <li
             className="menuAreaList"
             onClick={() => {

@@ -4,7 +4,8 @@ import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { URI } from "../../App";
-import { AnalyticsGraphArea } from "./anaylticsGraphArea";
+import { AnalyticsLineGraph } from "./analyticsLineGraph";
+import { AnalyticsArcGraph } from "./anaylticsArcGraph";
 
 export function AnalyticsComponents() {
   const [location, setLocation] = useState(101);
@@ -23,6 +24,19 @@ export function AnalyticsComponents() {
   //     console.log(soundRank);
   //     console.log(vibrationRank);
   //   }, [soundPercent, soundRank, vibrationRank]);
+
+  const getWeekDB = () => {
+    const start = moment(new Date()).startOf("day").subtract(7, "d");
+    const end = moment(new Date()).startOf("day").subtract(7, "d");
+
+    axios.get(`${URI}/api/data`, {
+      params: {
+        $filter_updated: `$gte ${start} $lte ${endDate}`,
+      },
+    });
+  };
+
+  const getDateDB = () => {};
 
   const getDB = (params) => {
     axios
@@ -128,9 +142,10 @@ export function AnalyticsComponents() {
       </div>
       <div className="analyticsMain">
         <div className="analyticsMain-rows">
-          <AnalyticsGraphArea value={soundPercent} reverse={false} />
-          <AnalyticsGraphArea value={soundRank} reverse={true} />
-          <AnalyticsGraphArea value={vibrationRank} reverse={true} />
+          <AnalyticsArcGraph value={soundPercent} reverse={false} />
+          <AnalyticsArcGraph value={soundRank} reverse={true} />
+          <AnalyticsArcGraph value={vibrationRank} reverse={true} />
+          <AnalyticsLineGraph />
         </div>
       </div>
     </div>
