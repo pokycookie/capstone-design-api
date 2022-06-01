@@ -8,19 +8,20 @@ export function FilterList(props) {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    const option = { value };
-    if (equal === true) option.equal = true;
-    if (gt === true) option.gt = true;
-    if (lt === true) option.lt = true;
+    let option = { value };
+    option.equal = equal;
+    option.gt = gt;
+    option.lt = lt;
+
+    if (equal === false && gt === false && lt === false) {
+      option = false;
+    }
 
     const temp = props.filterOption;
-    temp[props.index] =
-      check === false
-        ? false
-        : equal === false && gt === false && lt === false
-        ? false
-        : option;
-    props.setFilterOption([...temp]);
+    if (temp[props.index] !== option) {
+      temp[props.index] = check === false ? false : option;
+      props.setFilterOption([...temp]);
+    }
   }, [props, check, equal, gt, lt, value]);
 
   return (

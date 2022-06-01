@@ -180,7 +180,7 @@ export function ArcGraphComponents({ offset, average, focusData }) {
           fontWeight={600}
           fill="white"
         >
-          {focusData.updated !== false
+          {focusData.updated !== false && offset.y !== false
             ? moment(focusData.updated).format("YYYY-MM-DD HH:mm")
             : ""}
         </text>

@@ -5,6 +5,7 @@ import { CheckBox } from "./checkBox";
 import { SortList } from "./sortList";
 import { FilterList } from "./filterList";
 import moment from "moment";
+import { useWindow } from "../../hooks";
 
 export function BasicDBComponents(props) {
   const [isAllCheck, setAllCheck] = useState(false);
@@ -19,6 +20,8 @@ export function BasicDBComponents(props) {
     false,
     false,
   ]);
+
+  const windowSize = useWindow(0, 200);
 
   const filterText = (mode) => {
     const location = filterOption[0];
@@ -110,7 +113,7 @@ export function BasicDBComponents(props) {
   };
 
   return (
-    <div className="basicDBArea">
+    <div className="basicDBArea" style={{ height: windowSize.height }}>
       <div className="nav">
         <div className="nav-left">
           <button className="dbBtn refreshBtn" onClick={() => refresh()}>
@@ -263,12 +266,12 @@ export function BasicDBComponents(props) {
         </div>
         <p className="dbElement dbTitleElement">Room</p>
         <p className="dbElement dbTitleElement">Sound</p>
-        <p className="dbElement dbTitleElement">Vibration</p>
+        {/* <p className="dbElement dbTitleElement">Vibration</p> */}
         <p className="dbElement dbTitleElement">낸 소음</p>
         <p className="dbElement dbTitleElement">받은 소음</p>
         <p className="dbElement dbTitleElement">Updated</p>
       </div>
-      <ul className="dbListArea">
+      <ul className="dbListArea" style={{ height: windowSize.height - 160 }}>
         {Array.isArray(props.DB)
           ? props.DB.map((element, index) => {
               return (
@@ -286,7 +289,7 @@ export function BasicDBComponents(props) {
                   </div>
                   <p className="dbElement">{element.location}</p>
                   <p className="dbElement">{element.sound}</p>
-                  <p className="dbElement">{element.vibration}</p>
+                  {/* <p className="dbElement">{element.vibration}</p> */}
                   <p className="dbElement">{element.postSound}</p>
                   <p className="dbElement">{element.getSound}</p>
                   <p className="dbElement">

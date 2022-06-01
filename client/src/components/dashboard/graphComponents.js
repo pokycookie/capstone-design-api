@@ -124,14 +124,14 @@ export const GraphComponents = ({ DB, field }) => {
                   }}
                 />
                 <p>Bar</p> */}
-            <input
+            {/* <input
               type="checkbox"
               defaultChecked="true"
               onChange={({ target }) => {
                 setType(target, "line");
               }}
             />
-            <p>Line</p>
+            <p>Line</p> */}
             <input
               type="checkbox"
               defaultChecked="true"
@@ -198,16 +198,14 @@ export const GraphComponents = ({ DB, field }) => {
                       );
                     })
                   : null} */}
-            {Array.isArray(DB) && graphType.has("line") ? (
-              <polyline
-                points={polylinePoints}
-                fill="none"
-                strokeWidth={2}
-                stroke="#1b2433"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            ) : null}
+            <polyline
+              points={polylinePoints}
+              fill="none"
+              strokeWidth={2}
+              stroke="#1b2433"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
             <g>
               {Array.isArray(DB) && graphType.has("dot")
                 ? DB.map((element, index) => {

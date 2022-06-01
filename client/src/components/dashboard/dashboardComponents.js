@@ -15,7 +15,7 @@ export const DashboardComponents = () => {
   const [DB, setDB] = useState();
   const [location, setLocation] = useState(101);
   const [startDate, setStartDate] = useState(
-    moment(new Date()).subtract(1, "h").toISOString()
+    moment(new Date()).subtract(1, "h").add(1, "m").toISOString()
   );
   const [endDate, setEndDate] = useState(
     moment(new Date()).add(1, "m").toISOString()
@@ -88,7 +88,7 @@ export const DashboardComponents = () => {
         </div>
       </div>
       <GraphComponents DB={DB} graphCount={graphCount} field="sound" />
-      <GraphComponents DB={DB} graphCount={graphCount} field="vibration" />
+      {/* <GraphComponents DB={DB} graphCount={graphCount} field="vibration" /> */}
     </div>
   );
 };

@@ -4,13 +4,12 @@ import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { URI } from "../../App";
-import { GraphComponents } from "../dashboard/graphComponents";
 import { AdminGraph } from "./adminGraph";
 
 export function AdminComponents() {
   const [DB, setDB] = useState();
   const [startDate, setStartDate] = useState(
-    moment(new Date()).subtract(1, "h").toISOString()
+    moment(new Date()).subtract(1, "h").add(1, "m").toISOString()
   );
   const [endDate, setEndDate] = useState(
     moment(new Date()).add(1, "m").toISOString()
@@ -73,7 +72,7 @@ export function AdminComponents() {
           <p className="graphLocationInput-text">까지</p>
         </div>
       </div>
-      <AdminGraph DB={DB} />
+      <AdminGraph DB={DB} startDate={startDate} endDate={endDate} />
     </div>
   );
 }

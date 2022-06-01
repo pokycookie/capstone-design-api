@@ -6,8 +6,13 @@ export function SortList(props) {
 
   useEffect(() => {
     const temp = props.sortOption;
-    temp[props.index] = check === false ? false : option;
-    props.setSortOption([...temp]);
+    if (
+      (temp[props.index] === false && check === true) ||
+      temp[props.index] === option
+    ) {
+      temp[props.index] = check === false ? false : option;
+      props.setSortOption([...temp]);
+    }
   }, [option, check, props]);
 
   return (

@@ -8,11 +8,13 @@ defaultSet.add("dot");
 const INFO_WIDTH = 350; // 352 for square
 const INFO_WIDTH_FULL = INFO_WIDTH + 25; // 20 is margin-left
 
-export function AdminGraph({ DB }) {
+export function AdminGraph({ DB, startDate, endDate }) {
   const [polylinePoints, setPolylinePoints] = useState("");
   const [average, setAverage] = useState(0);
   const [averageLine, setAverageLine] = useState(false);
   const [locationArr, setLocationArr] = useState(0);
+  const [sortedData, setSortedData] = useState({});
+  const [polylineArr, setPolylineArr] = useState([]);
   const [graphType, setGraphType] = useState(new Set(defaultSet));
 
   const DOM = useRef();
@@ -25,32 +27,62 @@ export function AdminGraph({ DB }) {
   const graphHeight = 0.3;
   const svgWidth = windowSize.width < minWidth ? minWidth : maxWidth;
 
+  const setType = (target, type) => {
+    if (target.checked) {
+      const tempSet = graphType;
+      tempSet.add(type);
+      setGraphType(new Set(tempSet));
+    } else {
+      const tempSet = graphType;
+      tempSet.delete(type);
+      setGraphType(new Set(tempSet));
+    }
+  };
+
+  const getTimeDiff = (start, end) => {
+    if (!moment(start).isValid) return;
+    return moment(end).diff(moment(start), "m");
+  };
+
   // make polyline svg path
   useEffect(() => {
-    if (Array.isArray(DB)) {
-      let tempString = "";
-      DB.forEach((element, index) => {
-        tempString = tempString.concat(
-          `${index === 0 ? "" : " "}${parseInt(
-            (index * svgWidth) / DB.length + svgWidth / DB.length / 2
-          )} ${parseInt(svgHeight - element.sound * graphHeight)}${
-            index !== DB.length - 1 ? "," : ""
-          }`
-        );
-        setPolylinePoints(tempString);
-      });
-      if (DB.length === 0) {
-        setPolylinePoints("");
+    let tempArr = [];
+    if (Object.keys(sortedData).length === 0) {
+      setPolylineArr([]);
+    } else {
+      if (Array.isArray(locationArr)) {
+        locationArr.forEach((L) => {
+          if (Array.isArray(sortedData[L])) {
+            let tempString = "";
+            sortedData[L].forEach((element, index, arr) => {
+              tempString = tempString.concat(
+                `${index === 0 ? "" : " "}${parseInt(
+                  getTimeDiff(startDate, moment(element.updated)) *
+                    (svgWidth / getTimeDiff(startDate, endDate))
+                )} ${parseInt(svgHeight - element.sound * graphHeight)}${
+                  index !== arr.length - 1 ? "," : ""
+                }`
+              );
+            });
+            if (sortedData[L].length === 0) {
+              tempString = "";
+            }
+            tempArr.push(tempString);
+          }
+        });
+        setPolylineArr(tempArr);
       }
     }
     // eslint-disable-next-line
-  }, [polylinePoints, DB, windowSize]);
+  }, [sortedData, windowSize]);
 
   // set average value & location
   useEffect(() => {
     if (Array.isArray(DB) && DB.length > 0) {
       let average;
       const location = [];
+      const tempDB = {};
+
       if (DB.length > 1) {
         const DBArr = DB.map((element) => {
           return parseInt(element.sound);
@@ -65,46 +97,30 @@ export function AdminGraph({ DB }) {
         average = DB[0].sound * 0.3;
       }
       setAverage(parseInt(average));
-      DB.forEach((element) => {
+      DB.forEach((element, index, arr) => {
         if (!location.includes(element.location)) {
           location.push(element.location);
+          tempDB[element.location] = arr.filter(
+            (E) => E.location === element.location
+          );
         }
       });
       setLocationArr(location);
-      console.log(location);
+      setSortedData(tempDB);
     } else {
       setAverage(0);
       setLocationArr(0);
+      setSortedData({});
     }
   }, [DB]);
 
   if (!typeof type === "object") return;
-
-  const setType = (target, type) => {
-    if (target.checked) {
-      const tempSet = graphType;
-      tempSet.add(type);
-      setGraphType(new Set(tempSet));
-    } else {
-      const tempSet = graphType;
-      tempSet.delete(type);
-      setGraphType(new Set(tempSet));
-    }
-  };
 
   return (
     <div className="graphArea">
       <div className="graphArea-title">
         <p style={{ textTransform: "uppercase" }}>{`SOUND GRAPH`}</p>
         <div className="optionArea">
-          <input
-            type="checkbox"
-            defaultChecked="true"
-            onChange={({ target }) => {
-              setType(target, "dot");
-            }}
-          />
-          <p>Dot</p>
           <input
             type="checkbox"
             onChange={({ target }) => {
@@ -151,18 +167,22 @@ export function AdminGraph({ DB }) {
           </div>
         ) : null}
         <svg width={svgWidth} height={svgHeight}>
-          {Array.isArray(DB) ? (
-            <polyline
-              points={polylinePoints}
-              fill="none"
-              strokeWidth={2}
-              stroke="#1b2433"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              opacity={0.5}
-            />
-          ) : null}
-          <g>
+          {Array.isArray(polylineArr)
+            ? polylineArr.map((element, index) => {
+                return (
+                  <polyline
+                    key={index}
+                    points={element}
+                    fill="none"
+                    strokeWidth={1}
+                    stroke={`hsl(${index * 40}, 100%, 50%)`}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                );
+              })
+            : null}
+          {/* <g>
             {Array.isArray(DB) && graphType.has("dot")
               ? DB.map((element, index) => {
                   return (
@@ -187,7 +207,7 @@ export function AdminGraph({ DB }) {
                   );
                 })
               : null}
-          </g>
+          </g> */}
           {offset.x !== false &&
           offset.y !== false &&
           Array.isArray(DB) &&
