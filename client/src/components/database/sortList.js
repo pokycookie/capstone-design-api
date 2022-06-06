@@ -2,16 +2,13 @@ import { useEffect, useState } from "react";
 
 export function SortList(props) {
   const [check, setCheck] = useState(false);
-  const [option, setOption] = useState("asc");
+  const [option, setOption] = useState("false");
 
   useEffect(() => {
     const temp = props.sortOption;
-    if (
-      (temp[props.index] === false && check === true) ||
-      temp[props.index] === option
-    ) {
-      temp[props.index] = check === false ? false : option;
-      props.setSortOption([...temp]);
+    if (temp[props.content] !== option) {
+      temp[props.content] = option;
+      props.setSortOption({ ...temp });
     }
   }, [option, check, props]);
 
@@ -21,7 +18,10 @@ export function SortList(props) {
         <input
           className="sortList-element sortList-checkbox"
           value={check}
-          onChange={({ target }) => setCheck(target.checked)}
+          onChange={({ target }) => {
+            setCheck(target.checked);
+            setOption(`${target.checked ? "asc" : "false"}`);
+          }}
           type="checkbox"
         />
         <p className="sortList-element sortList-content">{props.content}</p>

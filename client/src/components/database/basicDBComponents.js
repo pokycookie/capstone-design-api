@@ -7,32 +7,44 @@ import { FilterList } from "./filterList";
 import moment from "moment";
 import { useWindow } from "../../hooks";
 
+const filterOptionObj = {
+  check: false,
+  equal: false,
+  gt: false,
+  lt: false,
+};
+
 export function BasicDBComponents(props) {
   const [isAllCheck, setAllCheck] = useState(false);
   const [checkSet, setCheckSet] = useState(new Set());
   const [refreshFlag, setRefreshFlag] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
-  const [sortOption, setSortOption] = useState([false, false, false, false]);
+  const [sortOption, setSortOption] = useState({
+    location: "false",
+    sound: "false",
+    vibration: "false",
+    updated: "false",
+  });
   const [filterOpen, setFilterOpen] = useState(false);
   const [filterOption, setFilterOption] = useState([
-    false,
-    false,
-    false,
-    false,
+    filterOptionObj,
+    filterOptionObj,
+    filterOptionObj,
+    filterOptionObj,
   ]);
 
   const windowSize = useWindow(0, 200);
 
   const filterText = (mode) => {
-    const location = filterOption[0];
-    const sound = filterOption[1];
-    const vibration = filterOption[2];
-    const updated = filterOption[3];
+    const location = filterOption[0].check;
+    const sound = filterOption[1].check;
+    const vibration = filterOption[2].check;
+    const updated = filterOption[3].check;
 
     const option = [];
     if (mode !== true) {
       filterOption.forEach((element, index) => {
-        if (element !== false) {
+        if (element.check !== false) {
           if (element.equal === true && element.gt === true) {
             option[index] = `$gte: ${element.value}`;
           } else if (element.equal === true && element.lt === true) {
@@ -53,7 +65,7 @@ export function BasicDBComponents(props) {
       }`;
     } else {
       filterOption.forEach((element, index) => {
-        if (element !== false) {
+        if (element.check !== false) {
           if (element.equal === true && element.gt === true) {
             option[index] = "$gte";
           } else if (element.equal === true && element.lt === true) {
@@ -72,15 +84,15 @@ export function BasicDBComponents(props) {
   };
 
   const sortText = () => {
-    const location = sortOption[0];
-    const sound = sortOption[1];
-    const vibration = sortOption[2];
-    const updated = sortOption[3];
+    const location = sortOption.location;
+    const sound = sortOption.sound;
+    const vibration = sortOption.vibration;
+    const updated = sortOption.updated;
 
-    return `${location !== false ? `Location(${location}) ` : ""}${
-      sound !== false ? `Sound(${sound}) ` : ""
-    }${vibration !== false ? `Vibration(${vibration}) ` : ""}${
-      updated !== false ? `Updated(${updated})` : ""
+    return `${location !== "false" ? `Location(${location}) ` : ""}${
+      sound !== "false" ? `Sound(${sound}) ` : ""
+    }${vibration !== "false" ? `Vibration(${vibration}) ` : ""}${
+      updated !== "false" ? `Updated(${updated})` : ""
     }`;
   };
 
@@ -88,21 +100,24 @@ export function BasicDBComponents(props) {
     const option = {};
     const filterResult = filterText(true);
 
-    if (sortOption[0] !== false) option.$orderby_location = sortOption[0];
-    if (sortOption[1] !== false) option.$orderby_sound = sortOption[1];
-    if (sortOption[2] !== false) option.$orderby_vibration = sortOption[2];
-    if (sortOption[3] !== false) option.$orderby_updated = sortOption[3];
+    if (sortOption.location !== "false")
+      option.$orderby_location = sortOption.location;
+    if (sortOption.sound !== "false") option.$orderby_sound = sortOption.sound;
+    if (sortOption.vibration !== "false")
+      option.$orderby_vibration = sortOption.vibration;
+    if (sortOption.updated !== "false")
+      option.$orderby_updated = sortOption.updated;
 
-    if (filterOption[0] !== false) {
+    if (filterOption[0].check !== false) {
       option.$filter_location = `${filterResult[0]} ${filterOption[0].value}`;
     }
-    if (filterOption[1] !== false) {
+    if (filterOption[1].check !== false) {
       option.$filter_sound = `${filterResult[1]} ${filterOption[1].value}`;
     }
-    if (filterOption[2] !== false) {
+    if (filterOption[2].check !== false) {
       option.$filter_vibration = `${filterResult[2]} ${filterOption[2].value}`;
     }
-    if (filterOption[3] !== false) {
+    if (filterOption[3].check !== false) {
       option.$filter_updated = `${filterResult[3]} ${filterOption[3].value}`;
     }
 
@@ -150,26 +165,22 @@ export function BasicDBComponents(props) {
               <SortList
                 sortOption={sortOption}
                 setSortOption={setSortOption}
-                index={0}
-                content="Location"
+                content="location"
               />
               <SortList
                 sortOption={sortOption}
                 setSortOption={setSortOption}
-                index={1}
-                content="Sound"
+                content="sound"
               />
               <SortList
                 sortOption={sortOption}
                 setSortOption={setSortOption}
-                index={2}
-                content="Vibration"
+                content="vibration"
               />
               <SortList
                 sortOption={sortOption}
                 setSortOption={setSortOption}
-                index={3}
-                content="Updated"
+                content="updated"
               />
             </ul>
           </div>

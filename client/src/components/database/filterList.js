@@ -1,26 +1,40 @@
+import { faL } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+
+function compareObj(obj1, obj2) {
+  if (typeof obj1 !== "object" || typeof obj2 !== "object") return false;
+  if (
+    obj1.check === obj2.check &&
+    obj1.equal === obj2.equal &&
+    obj1.gt === obj2.gt &&
+    obj1.lt === obj2.lt &&
+    obj1.value === obj2.value
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 export function FilterList(props) {
   const [check, setCheck] = useState(false);
   const [equal, setEqual] = useState(false);
   const [gt, setGt] = useState(false);
   const [lt, setLt] = useState(false);
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(props.index === 3 ? new Date() : 0);
 
   useEffect(() => {
-    let option = { value };
-    option.equal = equal;
-    option.gt = gt;
-    option.lt = lt;
+    let option = { check, equal, gt, lt, value };
 
     if (equal === false && gt === false && lt === false) {
-      option = false;
+      option.check = false;
     }
 
     const temp = props.filterOption;
-    if (temp[props.index] !== option) {
-      temp[props.index] = check === false ? false : option;
+    if (!compareObj(temp[props.index], option)) {
+      temp[props.index] = option;
       props.setFilterOption([...temp]);
+      console.log(temp);
     }
   }, [props, check, equal, gt, lt, value]);
 

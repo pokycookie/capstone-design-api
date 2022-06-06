@@ -9,7 +9,7 @@ import { AdminGraph } from "./adminGraph";
 export function AdminComponents() {
   const [DB, setDB] = useState();
   const [startDate, setStartDate] = useState(
-    moment(new Date()).subtract(1, "h").add(1, "m").toISOString()
+    moment(new Date()).subtract(30, "m").add(1, "m").toISOString()
   );
   const [endDate, setEndDate] = useState(
     moment(new Date()).add(1, "m").toISOString()
