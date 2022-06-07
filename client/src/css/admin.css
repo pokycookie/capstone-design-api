@@ -150,3 +150,40 @@
 .adminComponents .graphArea .graphComponents svg {
   overflow: visible;
 }
+
+.adminComponents .adminTableArea {
+  width: 100%;
+  background-color: white;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding-bottom: 50px;
+}
+
+.adminComponents .adminTable-title {
+  width: 100%;
+  height: 50px;
+  border-bottom: 3px solid #f2f2f2;
+  padding: 0px 50px 0px 50px;
+  box-sizing: border-box;
+  display: grid;
+  justify-items: start;
+  align-items: center;
+}
+.adminComponents .adminTable-title .list {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.adminComponents .adminTable-ul {
+  width: 100%;
+  box-sizing: border-box;
+}
+.adminComponents .adminTable-ul .list {
+  font-size: 14px;
+  height: 50px;
+  border-bottom: 2px solid #f2f2f2;
+  padding: 0px 50px 0px 50px;
+  display: grid;
+  justify-items: start;
+  align-items: center;
+}

@@ -5,6 +5,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { URI } from "../../App";
 import { AdminGraph } from "./adminGraph";
+import { AdminTable } from "./adminTable";
 
 export function AdminComponents() {
   const [DB, setDB] = useState();
@@ -73,6 +74,7 @@ export function AdminComponents() {
         </div>
       </div>
       <AdminGraph DB={DB} startDate={startDate} endDate={endDate} />
+      <AdminTable DB={DB} />
     </div>
   );
 }

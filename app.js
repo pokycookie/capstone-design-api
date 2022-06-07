@@ -312,8 +312,8 @@ app.post("/api/data", async (req, res) => {
       // Check duplicate data
       if (duplicateData !== null) {
         await Data.findByIdAndUpdate(duplicateData._id, {
-          sound: (parseInt(duplicateData.sound) + sound) / 2,
-          vibration: (parseInt(duplicateData.vibration) + vibration) / 2,
+          sound: parseInt(duplicateData.sound + sound / 2),
+          vibration: parseInt(duplicateData.vibration + vibration / 2),
           updated,
         });
         console.log("Update OK");

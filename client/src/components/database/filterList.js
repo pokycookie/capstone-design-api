@@ -1,4 +1,3 @@
-import { faL } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 
 function compareObj(obj1, obj2) {
@@ -34,7 +33,6 @@ export function FilterList(props) {
     if (!compareObj(temp[props.index], option)) {
       temp[props.index] = option;
       props.setFilterOption([...temp]);
-      console.log(temp);
     }
   }, [props, check, equal, gt, lt, value]);
 
