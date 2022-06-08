@@ -1,11 +1,13 @@
 import moment from "moment";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useWindow } from "../../hooks";
 
 export function AdminTable({ DB }) {
   const [locationArr, setLocationArr] = useState([]);
-  const [updatedArr, setUpdatedArr] = useState([]); // moment format: YYYY-MM-DD HH:mm
   const [sortedData, setSortedData] = useState([]);
+
+  const windowSize = useWindow();
 
   useEffect(() => {
     if (Array.isArray(DB)) {
@@ -21,7 +23,7 @@ export function AdminTable({ DB }) {
       });
       tempLocation.sort((a, b) => a - b);
 
-      // tempUpdated => updatedArr
+      // tempUpdated
       DB.forEach((element) => {
         if (
           !tempUpdated.includes(
@@ -33,7 +35,7 @@ export function AdminTable({ DB }) {
       });
       tempUpdated.sort((a, b) => a - b);
 
-      // tempData => srotedData
+      // tempData => sortedData
       tempUpdated.forEach((element) => {
         tempData.push(
           DB.filter(
@@ -43,7 +45,6 @@ export function AdminTable({ DB }) {
       });
 
       setLocationArr(tempLocation);
-      setUpdatedArr(tempUpdated);
       setSortedData(tempData);
     } else {
       setLocationArr([]);
@@ -70,7 +71,7 @@ export function AdminTable({ DB }) {
             })
           : null}
       </ul>
-      <ul className="adminTable-ul">
+      <ul className="adminTable-ul" style={{ height: windowSize.height - 170 }}>
         {Array.isArray(sortedData) && Array.isArray(locationArr)
           ? sortedData.map((element, index) => {
               return (

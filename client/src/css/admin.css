@@ -94,6 +94,19 @@
   font-size: 15px;
   font-weight: 600;
 }
+
+.adminComponents .graphArea .graphArea-title .left {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.adminComponents .graphArea .graphArea-title .left p {
+  margin-right: 10px;
+}
+.adminComponents .graphArea .graphArea-title .left input {
+  width: 50px;
+}
+
 .adminComponents .graphArea .graphArea-title .optionArea {
   display: flex;
   justify-content: flex-end;
@@ -147,8 +160,42 @@
   margin-right: 5px;
 }
 
+.adminComponents .graphArea .graphComponents {
+  position: relative;
+}
+.adminComponents .graphArea .graphComponents .info {
+  width: 110px;
+  position: absolute;
+  top: 10px;
+  padding: 6px;
+  background-color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  box-sizing: border-box;
+  box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+}
 .adminComponents .graphArea .graphComponents svg {
   overflow: visible;
+}
+
+.adminComponents .graphArea .graphComponents .info .data {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 2px;
+  font-size: 10px;
+}
+.adminComponents .graphArea .graphComponents .info .data .optionColor {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  margin-right: 5px;
 }
 
 .adminComponents .adminTableArea {
@@ -177,6 +224,14 @@
 .adminComponents .adminTable-ul {
   width: 100%;
   box-sizing: border-box;
+  overflow-y: auto;
+}
+.adminComponents .adminTable-ul::-webkit-scrollbar {
+  width: 2px;
+}
+.adminComponents .adminTable-ul::-webkit-scrollbar-thumb {
+  width: 2px;
+  background-color: #1b2433;
 }
 .adminComponents .adminTable-ul .list {
   font-size: 14px;

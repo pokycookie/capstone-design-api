@@ -5,10 +5,33 @@ import { useOffset, useWindow } from "../../hooks";
 const INFO_WIDTH = 350; // 352 for square
 const INFO_WIDTH_FULL = INFO_WIDTH + 25; // 20 is margin-left
 
+function getColor(index) {
+  if (index < 4) {
+    switch (index) {
+      case 0:
+        return "#EB5353";
+      case 1:
+        return "#F8CB2E";
+      case 2:
+        return "#36AE7C";
+      case 3:
+        return "#187498";
+      case 4:
+        return "#A85CF9";
+      default:
+        return "#EB5353";
+    }
+  } else {
+    return `hsl(${index * 40}, 100%, 50%)`;
+  }
+}
+
 export function AdminGraph({ DB, startDate, endDate }) {
   const [locationArr, setLocationArr] = useState(0);
   const [sortedData, setSortedData] = useState({});
   const [polylineArr, setPolylineArr] = useState([]);
+  const [lineWidth, setLineWidth] = useState(1.5);
+  const [updatedData, setUpdatedData] = useState([]);
 
   const DOM = useRef();
   const offset = useOffset(DOM);
@@ -25,6 +48,41 @@ export function AdminGraph({ DB, startDate, endDate }) {
     return moment(end).diff(moment(start), "m");
   };
 
+  const RATIO = svgWidth / getTimeDiff(startDate, endDate);
+
+  // updatedData
+  useEffect(() => {
+    if (Array.isArray(DB)) {
+      const tempUpdated = [];
+      const tempData = [];
+
+      // tempUpdated
+      DB.forEach((element) => {
+        if (
+          !tempUpdated.includes(
+            moment(element.updated).format("YYYY-MM-DD HH:mm")
+          )
+        ) {
+          tempUpdated.push(moment(element.updated).format("YYYY-MM-DD HH:mm"));
+        }
+      });
+      tempUpdated.sort((a, b) => a - b);
+
+      // tempData => sortedData
+      tempUpdated.forEach((element) => {
+        tempData.push(
+          DB.filter(
+            (E) => moment(E.updated).format("YYYY-MM-DD HH:mm") === element
+          ).sort((a, b) => moment(a.location).diff(moment(b.location)))
+        );
+      });
+      console.log(tempData);
+      setUpdatedData(tempData);
+    } else {
+      setUpdatedData([]);
+    }
+  }, [DB]);
+
   // make polyline svg path
   useEffect(() => {
     let tempArr = [];
@@ -38,8 +96,7 @@ export function AdminGraph({ DB, startDate, endDate }) {
             sortedData[L].forEach((element, index, arr) => {
               tempString = tempString.concat(
                 `${index === 0 ? "" : " "}${parseInt(
-                  getTimeDiff(startDate, moment(element.updated)) *
-                    (svgWidth / getTimeDiff(startDate, endDate))
+                  getTimeDiff(startDate, moment(element.updated)) * RATIO
                 )} ${parseInt(svgHeight - element.sound * graphHeight)}${
                   index !== arr.length - 1 ? "," : ""
                 }`
@@ -71,6 +128,8 @@ export function AdminGraph({ DB, startDate, endDate }) {
           );
         }
       });
+      location.sort((a, b) => a - b);
+
       setLocationArr(location);
       setSortedData(tempDB);
     } else {
@@ -84,7 +143,17 @@ export function AdminGraph({ DB, startDate, endDate }) {
   return (
     <div className="graphArea">
       <div className="graphArea-title">
-        <p style={{ textTransform: "uppercase" }}>{`SOUND GRAPH`}</p>
+        <div className="left">
+          <p style={{ textTransform: "uppercase" }}>{`SOUND GRAPH`}</p>
+          <input
+            type="range"
+            value={lineWidth}
+            min="1"
+            max="5"
+            step="0.1"
+            onChange={({ target }) => setLineWidth(target.value)}
+          />
+        </div>
         <div className="optionArea">
           {Array.isArray(locationArr)
             ? locationArr.map((element, index) => {
@@ -93,7 +162,7 @@ export function AdminGraph({ DB, startDate, endDate }) {
                     <div
                       className="optionColor"
                       style={{
-                        background: `hsl(${index * 40}, 100%, 50%)`,
+                        backgroundColor: getColor(index),
                       }}
                     ></div>
                     <p>{element}</p>
@@ -104,6 +173,38 @@ export function AdminGraph({ DB, startDate, endDate }) {
         </div>
       </div>
       <div className="graphComponents" ref={DOM}>
+        {offset.x !== false ? (
+          <div
+            className="info"
+            style={{
+              left: RATIO * parseInt((offset.x + RATIO / 2) / RATIO) - 55,
+            }}
+          >
+            <p style={{ marginBottom: "10px" }}>
+              {moment(startDate)
+                .add(parseInt((offset.x + RATIO / 2) / RATIO), "m")
+                .format("YYYY-MM-DD HH:mm")}
+            </p>
+            {Array.isArray(
+              updatedData[parseInt((offset.x + RATIO / 2) / RATIO)]
+            )
+              ? updatedData[parseInt((offset.x + RATIO / 2) / RATIO)].map(
+                  (E, index) => {
+                    return (
+                      <div className="data">
+                        <div
+                          className="optionColor"
+                          style={{ backgroundColor: getColor(index) }}
+                        ></div>
+                        <p>{E.sound}</p>
+                      </div>
+                    );
+                  }
+                )
+              : null}
+          </div>
+        ) : null}
+
         <svg width={svgWidth} height={svgHeight}>
           {Array.isArray(polylineArr)
             ? polylineArr.map((element, index) => {
@@ -112,8 +213,8 @@ export function AdminGraph({ DB, startDate, endDate }) {
                     key={index}
                     points={element}
                     fill="none"
-                    strokeWidth={1}
-                    stroke={`hsl(${index * 40}, 100%, 50%)`}
+                    strokeWidth={lineWidth}
+                    stroke={getColor(index)}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
@@ -142,6 +243,15 @@ export function AdminGraph({ DB, startDate, endDate }) {
                 stroke="#e84545"
                 strokeDasharray="5"
                 strokeWidth="2"
+              />
+              <line
+                x1={RATIO * parseInt((offset.x + RATIO / 2) / RATIO)}
+                y1="0"
+                x2={RATIO * parseInt((offset.x + RATIO / 2) / RATIO)}
+                y2={svgHeight}
+                stroke="#1b2433"
+                strokeDasharray="5"
+                strokeWidth="1"
               />
             </g>
           ) : null}

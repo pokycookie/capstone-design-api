@@ -10,11 +10,9 @@ import { AdminTable } from "./adminTable";
 export function AdminComponents() {
   const [DB, setDB] = useState();
   const [startDate, setStartDate] = useState(
-    moment(new Date()).subtract(30, "m").add(1, "m").toISOString()
+    moment(new Date()).subtract(30, "m").toISOString()
   );
-  const [endDate, setEndDate] = useState(
-    moment(new Date()).add(1, "m").toISOString()
-  );
+  const [endDate, setEndDate] = useState(moment(new Date()).toISOString());
   const [graphCount, setGraphCount] = useState(30);
 
   const getDB = (params) => {
@@ -30,7 +28,9 @@ export function AdminComponents() {
   };
 
   const query = {
-    $filter_updated: `$gte ${startDate} $lte ${endDate}`,
+    $filter_updated: `$gte ${startDate} $lt ${moment(endDate)
+      .add(1, "m")
+      .toISOString()}`,
   };
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export function AdminComponents() {
             className="graphBtn refreshBtn"
             onClick={() => {
               getDB(query);
-              setEndDate(moment(new Date()).add(1, "m").toISOString());
+              setEndDate(moment(new Date()).toISOString());
             }}
           >
             <FontAwesomeIcon icon={faRotateRight} />
