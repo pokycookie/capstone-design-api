@@ -45,7 +45,6 @@ export function AdminTable({ DB }) {
       setLocationArr(tempLocation);
       setUpdatedArr(tempUpdated);
       setSortedData(tempData);
-      console.log(tempLocation);
     } else {
       setLocationArr([]);
       setSortedData([]);
