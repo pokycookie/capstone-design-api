@@ -76,7 +76,6 @@ export function AdminGraph({ DB, startDate, endDate }) {
           ).sort((a, b) => moment(a.location).diff(moment(b.location)))
         );
       });
-      console.log(tempData);
       setUpdatedData(tempData);
     } else {
       setUpdatedData([]);
@@ -191,10 +190,14 @@ export function AdminGraph({ DB, startDate, endDate }) {
               ? updatedData[parseInt((offset.x + RATIO / 2) / RATIO)].map(
                   (E, index) => {
                     return (
-                      <div className="data">
+                      <div className="data" key={index}>
                         <div
                           className="optionColor"
-                          style={{ backgroundColor: getColor(index) }}
+                          style={{
+                            backgroundColor: getColor(
+                              locationArr.findIndex((L) => L === E.location)
+                            ),
+                          }}
                         ></div>
                         <p>{E.sound}</p>
                       </div>
