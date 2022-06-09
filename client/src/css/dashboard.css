@@ -109,3 +109,105 @@
   margin-left: 20px;
   margin-right: 5px;
 }
+
+/* DashboardTable */
+.dashboardComponents .dashboardTableArea {
+  width: 100%;
+  background-color: white;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding-bottom: 50px;
+}
+.dashboardComponents .dashboardTable-title {
+  width: 100%;
+  height: 50px;
+  border-bottom: 3px solid #f2f2f2;
+  padding: 0px 50px 0px 50px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 120px 120px 120px 1fr 250px;
+  justify-items: start;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+}
+.dashboardComponents .dashboardTable-ul {
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+.dashboardComponents .dashboardTable-ul::-webkit-scrollbar {
+  width: 2px;
+}
+.dashboardComponents .dashboardTable-ul::-webkit-scrollbar-thumb {
+  width: 2px;
+  background-color: #1b2433;
+}
+
+.dashboardComponents .dashboardTable-li {
+  display: grid;
+  grid-template-columns: 120px 120px 120px 1fr 250px;
+  justify-items: start;
+  align-items: center;
+  width: 100%;
+  height: 50px;
+  border-bottom: 2px solid #f2f2f2;
+  padding: 0px 50px 0px 50px;
+  box-sizing: border-box;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dashboardComponents .dashboardTable-li .dashboardTable-ratioBar {
+  width: 90%;
+  height: 20px;
+  box-sizing: border-box;
+  border: 1px solid #1b2433;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  /* background-image: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%); */
+}
+.dashboardComponents .dashboardTable-li .dashboardTable-ratioBar-div {
+  width: 90%;
+  height: 20px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+}
+.dashboardComponents .dashboardTable-li .postSound {
+  background-color: #e84545;
+}
+.dashboardComponents .dashboardTable-li .getSound {
+  background-color: #3e497a;
+}
+
+/* Analytics Area */
+.analyticsArea {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.analyticsArea .arcGraphArea {
+  width: 350px;
+  height: 350px;
+  background-color: white;
+  border-radius: 20px;
+  margin-right: 20px;
+  position: relative;
+  box-sizing: border-box;
+}
+.analyticsArea .analyticsInfo {
+  flex: 1;
+  height: 350px;
+  background-color: white;
+  border-radius: 20px;
+  box-sizing: border-box;
+}

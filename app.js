@@ -342,16 +342,24 @@ app.post("/api/data", async (req, res) => {
       });
       tempArr.sort((a, b) => b.sound - a.sound);
 
+      // Loudest
       await Data.findByIdAndUpdate(tempArr[0]._id, {
         getSound: 0,
         postSound: tempArr[0].sound,
       });
 
+      // Others
       tempArr.forEach(async (element, index, arr) => {
         if (index > 0) {
           await Data.findByIdAndUpdate(element._id, {
-            getSound: arr[0].sound * 0.5, // 0.5 => Noise attenuation factor
-            postSound: element.sound - arr[0].sound * 0.5,
+            getSound:
+              arr[0].sound * 0.5 < element.sound
+                ? arr[0].sound * 0.5
+                : element.sound, // 0.5 => Noise attenuation factor
+            postSound:
+              element.sound - arr[0].sound * 0.5 < element.sound
+                ? arr[0].sound * 0.5
+                : element.sound,
           });
         }
       });

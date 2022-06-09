@@ -172,7 +172,7 @@ export function AdminGraph({ DB, startDate, endDate }) {
         </div>
       </div>
       <div className="graphComponents" ref={DOM}>
-        {offset.x !== false ? (
+        {offset.x !== false && Array.isArray(DB) && DB.length > 0 ? (
           <div
             className="info"
             style={{

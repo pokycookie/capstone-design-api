@@ -4,6 +4,8 @@ import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { URI } from "../../App";
+import { AnalyticsArcGraph } from "../analytics/anaylticsArcGraph";
+import { DashboardTable } from "./dashboardTable";
 import { GraphComponents } from "./graphComponents";
 
 const defaultSet = new Set();
@@ -21,6 +23,61 @@ export const DashboardComponents = () => {
     moment(new Date()).add(1, "m").toISOString()
   );
   const [graphCount, setGraphCount] = useState(30);
+  const [soundPercent, setSoundPercent] = useState();
+  const [soundRank, setSoundRank] = useState();
+  const [vibrationRank, setVibrationRank] = useState();
+
+  const getRank = () => {
+    axios
+      .get(`${URI}/api/data`, {
+        params: { $filter_updated: `$gte ${startDate} $lte ${endDate}` },
+      })
+      .then((res) => {
+        if (Array.isArray(res.data)) {
+          setSoundPercent(
+            parseInt(
+              res.data
+                .filter((e) => (e.location = location))
+                .map((e) => (e.getSound / e.sound) * 100)
+                .reduce((prev, curr) => {
+                  return prev + curr;
+                }, 0) / res.data.length
+            )
+          );
+          setSoundRank(
+            parseInt(
+              res.data
+                .filter((e) => (e.location = location))
+                .map((e) => e.postSound)
+                .reduce((prev, curr) => {
+                  return prev + curr;
+                }, 0) /
+                res.data
+                  .map((e) => e.postSound)
+                  .reduce((prev, curr) => {
+                    return prev + curr;
+                  }, 0)
+            )
+          );
+          setVibrationRank(
+            parseInt(
+              res.data
+                .filter((e) => (e.location = location))
+                .map((e) => e.vibration)
+                .reduce((prev, curr) => {
+                  return prev + curr;
+                }, 0) /
+                res.data
+                  .map((e) => e.vibration)
+                  .reduce((prev, curr) => {
+                    return prev + curr;
+                  }, 0)
+            )
+          );
+        }
+      })
+      .catch((err) => console.error(err));
+  };
 
   const getDB = (params) => {
     axios
@@ -37,10 +94,12 @@ export const DashboardComponents = () => {
   const query = {
     $filter_updated: `$gte ${startDate} $lte ${endDate}`,
     $filter_location: `$equals ${location}`,
+    $orderby_updated: "asc",
   };
 
   useEffect(() => {
     getDB(query);
+    getRank();
     // eslint-disable-next-line
   }, [startDate, endDate, location]);
 
@@ -89,6 +148,12 @@ export const DashboardComponents = () => {
       </div>
       <GraphComponents DB={DB} graphCount={graphCount} field="sound" />
       {/* <GraphComponents DB={DB} graphCount={graphCount} field="vibration" /> */}
+      <div className="analyticsArea">
+        <AnalyticsArcGraph value={soundPercent} reverse={false} />
+        <AnalyticsArcGraph value={soundRank} reverse={true} />
+        <div className="analyticsInfo"></div>
+      </div>
+      <DashboardTable DB={DB} />
     </div>
   );
 };

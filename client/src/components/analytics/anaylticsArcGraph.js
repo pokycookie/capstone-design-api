@@ -48,7 +48,7 @@ export function AnalyticsArcGraph({ value, reverse }) {
           fontWeight="700"
           fill="#1B2433"
         >
-          {ANGLE / 3.6}%
+          {(ANGLE / 3.6).toFixed(1)}%
         </text>
       </svg>
     </div>

@@ -50,10 +50,10 @@
   text-transform: uppercase;
 }
 
-.arcGraphArea {
+.graphInfoComponents .arcGraphArea {
   position: relative;
 }
-.arcGraphArea .arcGraphSVG {
+.graphInfoComponents .arcGraphArea .arcGraphSVG {
   position: absolute;
   top: 0;
   left: 0;

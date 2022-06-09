@@ -9,8 +9,10 @@ const defaultSet = new Set();
 defaultSet.add("line");
 defaultSet.add("dot");
 
-const INFO_WIDTH = 350; // 352 for square
-const INFO_WIDTH_FULL = INFO_WIDTH + 25; // 20 is margin-left
+const INFO_WIDTH = 352; // 352 for square
+const INFO_WIDTH_FULL = INFO_WIDTH + 20; // 20 is margin-right
+const NAV_WIDTH = 250;
+const PADDING_WIDTH = 100;
 
 export const GraphComponents = ({ DB, field }) => {
   const [polylinePoints, setPolylinePoints] = useState("");
@@ -20,7 +22,10 @@ export const GraphComponents = ({ DB, field }) => {
 
   const DOM = useRef();
   const offset = useOffset(DOM);
-  const windowSize = useWindow(350 + INFO_WIDTH_FULL);
+  const windowSize = useWindow(
+    NAV_WIDTH + PADDING_WIDTH + INFO_WIDTH_FULL + 10,
+    0
+  );
 
   const svgHeight = 300;
   const maxWidth = windowSize.width;
@@ -116,14 +121,14 @@ export const GraphComponents = ({ DB, field }) => {
         <div className="graphArea-title">
           <p style={{ textTransform: "uppercase" }}>{`${field} GRAPH`}</p>
           <div className="optionArea">
-            {/* <input
-                  type="checkbox"
-                  defaultChecked="false"
-                  onChange={({ target }) => {
-                    setType(target, "bar");
-                  }}
-                />
-                <p>Bar</p> */}
+            <input
+              type="checkbox"
+              defaultChecked={false}
+              onChange={({ target }) => {
+                setType(target, "soundRatio");
+              }}
+            />
+            <p>소음 비율</p>
             {/* <input
               type="checkbox"
               defaultChecked="true"
@@ -182,22 +187,37 @@ export const GraphComponents = ({ DB, field }) => {
             </div>
           ) : null}
           <svg width={svgWidth} height={svgHeight}>
-            {/* {Array.isArray(DB) && graphType.has("bar")
-                  ? DB.map((element, index) => {
-                      return (
-                        <rect
-                          className="svgGraph"
-                          key={index}
-                          x={0 + (index * svgWidth) / DB.length}
-                          y={svgHeight - element[field] * graphHeight}
-                          width={svgWidth / DB.length}
-                          height={element[field] * graphHeight}
-                          fill="#3e497a"
-                          opacity={0.8}
-                        />
-                      );
-                    })
-                  : null} */}
+            {Array.isArray(DB) && graphType.has("soundRatio")
+              ? DB.map((element, index) => {
+                  const postSound =
+                    element.postSound < 0 ? 0 : element.postSound;
+                  const x = parseInt(
+                    (index * svgWidth) / DB.length + svgWidth / DB.length / 2
+                  );
+                  return (
+                    <g key={index}>
+                      <line
+                        className="svgGraph"
+                        x1={x}
+                        y1={svgHeight - postSound * graphHeight}
+                        x2={x}
+                        y2={svgHeight}
+                        stroke="#e84545"
+                        strokeWidth={4}
+                      />
+                      <line
+                        className="svgGraph"
+                        x1={x}
+                        y1={parseInt(svgHeight - element.sound * graphHeight)}
+                        x2={x}
+                        y2={svgHeight - postSound * graphHeight}
+                        stroke="#3E497A"
+                        strokeWidth={4}
+                      />
+                    </g>
+                  );
+                })
+              : null}
             <polyline
               points={polylinePoints}
               fill="none"

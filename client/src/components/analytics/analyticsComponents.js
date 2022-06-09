@@ -4,7 +4,6 @@ import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { URI } from "../../App";
-import { AnalyticsLineGraph } from "./analyticsLineGraph";
 import { AnalyticsArcGraph } from "./anaylticsArcGraph";
 
 export function AnalyticsComponents() {
@@ -145,7 +144,6 @@ export function AnalyticsComponents() {
           <AnalyticsArcGraph value={soundPercent} reverse={false} />
           <AnalyticsArcGraph value={soundRank} reverse={true} />
           <AnalyticsArcGraph value={vibrationRank} reverse={true} />
-          <AnalyticsLineGraph />
         </div>
       </div>
     </div>
