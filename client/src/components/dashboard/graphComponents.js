@@ -19,6 +19,7 @@ export const GraphComponents = ({ DB, field }) => {
   const [average, setAverage] = useState(0);
   const [averageLine, setAverageLine] = useState(false);
   const [graphType, setGraphType] = useState(new Set(defaultSet));
+  const [ratioPoints, setRatioPoints] = useState("");
 
   const DOM = useRef();
   const offset = useOffset(DOM);
@@ -37,7 +38,9 @@ export const GraphComponents = ({ DB, field }) => {
   useEffect(() => {
     if (Array.isArray(DB)) {
       let tempString = "";
+      let ratioString = "";
       DB.forEach((element, index) => {
+        const postSound = element.postSound < 0 ? 0 : element.postSound;
         tempString = tempString.concat(
           `${index === 0 ? "" : " "}${parseInt(
             (index * svgWidth) / DB.length + svgWidth / DB.length / 2
@@ -45,14 +48,22 @@ export const GraphComponents = ({ DB, field }) => {
             index !== DB.length - 1 ? "," : ""
           }`
         );
+        ratioString = ratioString.concat(
+          `${parseInt(
+            (index * svgWidth) / DB.length + svgWidth / DB.length / 2
+          )} ${parseInt(svgHeight - postSound * graphHeight)}, `
+        );
+
         setPolylinePoints(tempString);
+        setRatioPoints(ratioString);
       });
       if (DB.length === 0) {
         setPolylinePoints("");
+        setRatioPoints("");
       }
     }
     // eslint-disable-next-line
-  }, [polylinePoints, DB, windowSize, field]);
+  }, [polylinePoints, ratioPoints, DB, windowSize, field]);
 
   // set average value
   useEffect(() => {
@@ -187,37 +198,51 @@ export const GraphComponents = ({ DB, field }) => {
             </div>
           ) : null}
           <svg width={svgWidth} height={svgHeight}>
-            {Array.isArray(DB) && graphType.has("soundRatio")
-              ? DB.map((element, index) => {
-                  const postSound =
-                    element.postSound < 0 ? 0 : element.postSound;
-                  const x = parseInt(
-                    (index * svgWidth) / DB.length + svgWidth / DB.length / 2
-                  );
-                  return (
-                    <g key={index}>
-                      <line
-                        className="svgGraph"
-                        x1={x}
-                        y1={svgHeight - postSound * graphHeight}
-                        x2={x}
-                        y2={svgHeight}
-                        stroke="#e84545"
-                        strokeWidth={4}
-                      />
-                      <line
-                        className="svgGraph"
-                        x1={x}
-                        y1={parseInt(svgHeight - element.sound * graphHeight)}
-                        x2={x}
-                        y2={svgHeight - postSound * graphHeight}
-                        stroke="#3E497A"
-                        strokeWidth={4}
-                      />
-                    </g>
-                  );
-                })
-              : null}
+            {Array.isArray(DB) && graphType.has("soundRatio") ? (
+              <g>
+                <polyline
+                  points={polylinePoints.concat(
+                    `, ${svgWidth} ${svgHeight}, 0 ${svgHeight}`
+                  )}
+                  fill="#3E497A"
+                />
+                <polyline
+                  points={ratioPoints.concat(
+                    `${svgWidth} ${svgHeight}, 0 ${svgHeight}`
+                  )}
+                  fill="#E84545"
+                />
+              </g>
+            ) : // {DB.map((element, index) => {
+            //   const postSound =
+            //     element.postSound < 0 ? 0 : element.postSound;
+            //   const x = parseInt(
+            //     (index * svgWidth) / DB.length + svgWidth / DB.length / 2
+            //   );
+            //   return (
+            //     <g key={index}>
+            //       <line
+            //         className="svgGraph"
+            //         x1={x}
+            //         y1={svgHeight - postSound * graphHeight}
+            //         x2={x}
+            //         y2={svgHeight}
+            //         stroke="#e84545"
+            //         strokeWidth={svgWidth / DB.length + 2}
+            //       />
+            //       <line
+            //         className="svgGraph"
+            //         x1={x}
+            //         y1={parseInt(svgHeight - element.sound * graphHeight)}
+            //         x2={x}
+            //         y2={svgHeight - postSound * graphHeight}
+            //         stroke="#3E497A"
+            //         strokeWidth={svgWidth / DB.length + 2}
+            //       />
+            //     </g>
+            //   );
+            // })}
+            null}
             <polyline
               points={polylinePoints}
               fill="none"

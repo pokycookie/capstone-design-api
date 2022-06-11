@@ -26,57 +26,69 @@ export const DashboardComponents = () => {
     moment(new Date()).add(1, "m").toISOString()
   );
   const [graphCount, setGraphCount] = useState(30);
-  const [soundPercent, setSoundPercent] = useState();
-  const [soundRank, setSoundRank] = useState();
-  const [vibrationRank, setVibrationRank] = useState();
+  const [soundPercent, setSoundPercent] = useState(0);
+  const [soundRank, setSoundRank] = useState(0);
+
+  // useEffect(() => {
+  //   console.log(`soundPercent: ${soundPercent}`);
+  //   console.log(`soundRank: ${soundRank}`);
+  // }, [soundPercent, soundRank]);
 
   const getRank = () => {
     axios
       .get(`${URI}/api/data`, {
-        params: { $filter_updated: `$gte ${startDate} $lte ${endDate}` },
+        params: {
+          $filter_updated: `$gte ${startDate} $lte ${endDate}`,
+          $orderby_updated: "asc",
+        },
       })
       .then((res) => {
         if (Array.isArray(res.data)) {
-          setSoundPercent(
-            parseInt(
-              res.data
-                .filter((e) => (e.location = location))
-                .map((e) => (e.getSound / e.sound) * 100)
-                .reduce((prev, curr) => {
-                  return prev + curr;
-                }, 0) / res.data.length
-            )
-          );
-          setSoundRank(
-            parseInt(
-              res.data
-                .filter((e) => (e.location = location))
-                .map((e) => e.postSound)
-                .reduce((prev, curr) => {
-                  return prev + curr;
-                }, 0) /
-                res.data
-                  .map((e) => e.postSound)
-                  .reduce((prev, curr) => {
-                    return prev + curr;
-                  }, 0)
-            )
-          );
-          setVibrationRank(
-            parseInt(
-              res.data
-                .filter((e) => (e.location = location))
-                .map((e) => e.vibration)
-                .reduce((prev, curr) => {
-                  return prev + curr;
-                }, 0) /
-                res.data
-                  .map((e) => e.vibration)
-                  .reduce((prev, curr) => {
-                    return prev + curr;
-                  }, 0)
-            )
-          );
+          const filteredData = res.data
+            .filter((e) => e.location === parseInt(location))
+            .map((e) => {
+              const postSound = e.postSound < 0 ? 0 : e.postSound;
+              return (postSound / e.sound) * 100;
+            });
+
+          const soundPercentResult =
+            filteredData.reduce((prev, curr) => {
+              return prev + curr;
+            }, 0) / filteredData.length;
+
+          // setSoundPercent
+          setSoundPercent(soundPercentResult);
+
+          // setSoundRank
+          const locationArr = [];
+          const tempArr = [];
+
+          res.data.forEach((element) => {
+            if (!locationArr.includes(element.location)) {
+              locationArr.push(element.location);
+            }
+          });
+          locationArr.sort((a, b) => a - b);
+
+          locationArr.forEach((L) => {
+            const a = res.data
+              .filter((E) => E.location === parseInt(L))
+              .map((V) => {
+                const postSound = V.postSound < 0 ? 0 : V.postSound;
+                return (postSound / V.sound) * 100;
+              });
+            tempArr.push(
+              a.reduce((prev, curr) => {
+                return prev + curr;
+              }, 0) / a.length
+            );
+          });
+          tempArr.sort((a, b) => b - a);
+
+          const tempRank =
+            tempArr.findIndex((I) => I === soundPercentResult) + 1;
+
+          setSoundRank((tempRank / tempArr.length) * 100);
         }
       })
       .catch((err) => console.error(err));
@@ -101,9 +113,10 @@ export const DashboardComponents = () => {
   };
 
   useEffect(() => {
+    getDB(query);
     getRank();
     // eslint-disable-next-line
-  }, [startDate, endDate, location]);
+  }, [location]);
 
   return (
     <div className="dashboardComponents">
@@ -113,6 +126,7 @@ export const DashboardComponents = () => {
             className="graphBtn refreshBtn"
             onClick={() => {
               getDB(query);
+              getRank();
               setEndDate(moment(new Date()).add(1, "m").toISOString());
             }}
           >
@@ -131,6 +145,7 @@ export const DashboardComponents = () => {
           <button
             className="graphBtn refreshBtn"
             onClick={() => {
+              getRank();
               getDB(query);
             }}
           >
@@ -164,8 +179,12 @@ export const DashboardComponents = () => {
       <GraphComponents DB={DB} graphCount={graphCount} field="sound" />
       {/* <GraphComponents DB={DB} graphCount={graphCount} field="vibration" /> */}
       <div className="analyticsArea">
-        <AnalyticsArcGraph value={soundPercent} reverse={false} />
-        <AnalyticsArcGraph value={soundRank} reverse={true} />
+        <AnalyticsArcGraph
+          value={soundPercent}
+          reverse={false}
+          title="소음비율"
+        />
+        <AnalyticsArcGraph value={soundRank} reverse={true} title="상위" />
         <div className="analyticsInfo"></div>
       </div>
       <DashboardTable DB={DB} />

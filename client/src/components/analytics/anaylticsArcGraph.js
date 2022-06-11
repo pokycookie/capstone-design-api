@@ -1,12 +1,8 @@
 import { Arc } from "../arc";
 
-export function AnalyticsArcGraph({ value, reverse }) {
+export function AnalyticsArcGraph({ value, reverse, title }) {
   const OFFSET = parseInt(Math.random() * 360);
-  const ANGLE = isNaN(value)
-    ? 0
-    : reverse === false
-    ? value * 3.6
-    : (100 - value) * 3.6;
+  const ANGLE = isNaN(value) ? 0 : value * 3.6;
 
   return (
     <div className="arcGraphArea">
@@ -18,7 +14,7 @@ export function AnalyticsArcGraph({ value, reverse }) {
           startAngle={OFFSET + 1}
           endAngle={OFFSET + ANGLE}
           thickness={35}
-          color="#E84545"
+          color={reverse ? "#3E497A" : "#E84545"}
         />
         <Arc
           x={175}
@@ -27,7 +23,7 @@ export function AnalyticsArcGraph({ value, reverse }) {
           startAngle={OFFSET + ANGLE + 1}
           endAngle={OFFSET}
           thickness={35}
-          color="#3E497A"
+          color={reverse ? "#E84545" : "#3E497A"}
         />
 
         <text
@@ -38,7 +34,7 @@ export function AnalyticsArcGraph({ value, reverse }) {
           fontWeight="600"
           fill="#1B2433"
         >
-          {reverse ? "상위" : "피해"}
+          {title}
         </text>
         <text
           x="175"

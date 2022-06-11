@@ -48,8 +48,8 @@ export function AdminComponents() {
           <button
             className="graphBtn refreshBtn"
             onClick={() => {
-              getDB(query);
               setEndDate(moment(new Date()).toISOString());
+              getDB(query);
             }}
           >
             <FontAwesomeIcon icon={faRotateRight} />
@@ -67,7 +67,7 @@ export function AdminComponents() {
           <input
             className="graphLocationInput"
             type="datetime-local"
-            defaultValue={moment(startDate).format("YYYY-MM-DDTHH:mm")}
+            value={moment(startDate).format("YYYY-MM-DDTHH:mm")}
             onChange={({ target }) => {
               setStartDate(moment(target.value).toISOString());
             }}
@@ -81,7 +81,7 @@ export function AdminComponents() {
           <input
             className="graphLocationInput"
             type="datetime-local"
-            defaultValue={moment(endDate).format("YYYY-MM-DDTHH:mm")}
+            value={moment(endDate).format("YYYY-MM-DDTHH:mm")}
             onChange={({ target }) => {
               setEndDate(moment(target.value).toISOString());
             }}

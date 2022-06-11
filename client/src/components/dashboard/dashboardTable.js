@@ -7,7 +7,7 @@ export function DashboardTable({ DB }) {
   return (
     <div className="dashboardTableArea">
       <div className="dashboardTable-title">
-        <p>Sound</p>
+        <p>sound</p>
         <p>낸 소음</p>
         <p>받은 소음</p>
         <p>소음 비율</p>

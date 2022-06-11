@@ -14,15 +14,15 @@ export function AnalyticsComponents() {
   const [endDate, setEndDate] = useState(
     moment(new Date()).add(1, "m").toISOString()
   );
-  const [soundPercent, setSoundPercent] = useState();
-  const [soundRank, setSoundRank] = useState();
-  const [vibrationRank, setVibrationRank] = useState();
+  const [soundPercent, setSoundPercent] = useState(0);
+  const [soundRank, setSoundRank] = useState(0);
+  const [vibrationRank, setVibrationRank] = useState(0);
 
-  //   useEffect(() => {
-  //     console.log(soundPercent);
-  //     console.log(soundRank);
-  //     console.log(vibrationRank);
-  //   }, [soundPercent, soundRank, vibrationRank]);
+  useEffect(() => {
+    console.log(soundPercent);
+    console.log(soundRank);
+    console.log(vibrationRank);
+  }, [soundPercent, soundRank, vibrationRank]);
 
   const getWeekDB = () => {
     const start = moment(new Date()).startOf("day").subtract(7, "d");
@@ -88,7 +88,7 @@ export function AnalyticsComponents() {
   };
 
   useEffect(() => {
-    getDB(query);
+    // getDB(query);
     // eslint-disable-next-line
   }, [startDate, endDate, location]);
 
