@@ -57,7 +57,6 @@
   box-sizing: border-box;
   text-align: right;
   padding: 0px 5px 0px 5px;
-  margin-left: 15px;
 }
 .dashboardComponents .dashboardNav .graphLocationInput.location {
   width: 120px;

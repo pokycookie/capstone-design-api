@@ -185,10 +185,29 @@ export function AdminGraph({ DB, startDate, endDate }) {
                 .format("YYYY-MM-DD HH:mm")}
             </p>
             {Array.isArray(
-              updatedData[parseInt((offset.x + RATIO / 2) / RATIO)]
+              updatedData.find(
+                (F) =>
+                  moment(F[0].updated)
+                    .startOf("m")
+                    .format("YYYY-MM-DD HH:mm") ===
+                  moment(startDate)
+                    .add(parseInt((offset.x + RATIO / 2) / RATIO), "m")
+                    .startOf("m")
+                    .format("YYYY-MM-DD HH:mm")
+              )
             )
-              ? updatedData[parseInt((offset.x + RATIO / 2) / RATIO)].map(
-                  (E, index) => {
+              ? updatedData
+                  .find(
+                    (F) =>
+                      moment(F[0].updated)
+                        .startOf("m")
+                        .format("YYYY-MM-DD HH:mm") ===
+                      moment(startDate)
+                        .add(parseInt((offset.x + RATIO / 2) / RATIO), "m")
+                        .startOf("m")
+                        .format("YYYY-MM-DD HH:mm")
+                  )
+                  .map((E, index) => {
                     return (
                       <div className="data" key={index}>
                         <div
@@ -202,8 +221,7 @@ export function AdminGraph({ DB, startDate, endDate }) {
                         <p>{E.sound}</p>
                       </div>
                     );
-                  }
-                )
+                  })
               : null}
           </div>
         ) : null}
@@ -229,24 +247,6 @@ export function AdminGraph({ DB, startDate, endDate }) {
           Array.isArray(DB) &&
           DB.length > 0 ? (
             <g>
-              <text
-                x="20"
-                y={offset.y - 10}
-                textAnchor="middle"
-                fontWeight={600}
-                fontSize={12}
-              >
-                {offset.y !== false ? parseInt((299 - offset.y) * 3.333) : 0}
-              </text>
-              <line
-                x1="0"
-                y1={offset.y}
-                x2={svgWidth}
-                y2={offset.y}
-                stroke="#e84545"
-                strokeDasharray="5"
-                strokeWidth="2"
-              />
               <line
                 x1={RATIO * parseInt((offset.x + RATIO / 2) / RATIO)}
                 y1="0"

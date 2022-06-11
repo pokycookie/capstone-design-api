@@ -71,11 +71,10 @@
 
 .historyArea {
   width: 100%;
-  min-width: 870px;
-  height: 100%;
+  min-width: 940px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
   background-color: white;
@@ -84,7 +83,6 @@
 }
 .historyArea .historyUl {
   width: 100%;
-  height: 800px;
   overflow-y: auto;
   overflow-x: hidden;
 }

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { URI } from "../../App";
+import { useWindow } from "../../hooks";
 
 const transTime = (time) => {
   return time >= 10 ? time : `0${time}`;
@@ -10,6 +11,7 @@ const transTime = (time) => {
 
 export function HistoryComponents(props) {
   const [history, setHistory] = useState([]);
+  const windowSize = useWindow(0, 200);
 
   useEffect(() => {
     getHistory();
@@ -27,7 +29,7 @@ export function HistoryComponents(props) {
   };
 
   return (
-    <div className="historyArea">
+    <div className="historyArea" style={{ height: windowSize.height }}>
       <div className="btnArea">
         <button
           className="refreshBtn"
@@ -50,7 +52,7 @@ export function HistoryComponents(props) {
           </div>
         ) : null}
       </div>
-      <ul className="historyUl">
+      <ul className="historyUl" style={{ height: windowSize.height - 100 }}>
         {Array.isArray(history)
           ? history.map((element, index) => {
               return (

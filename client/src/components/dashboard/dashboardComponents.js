@@ -1,4 +1,7 @@
-import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faRotateRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import moment from "moment";
@@ -98,7 +101,6 @@ export const DashboardComponents = () => {
   };
 
   useEffect(() => {
-    getDB(query);
     getRank();
     // eslint-disable-next-line
   }, [startDate, endDate, location]);
@@ -126,6 +128,14 @@ export const DashboardComponents = () => {
           <p>호</p>
         </div>
         <div className="dashboardNav-right">
+          <button
+            className="graphBtn refreshBtn"
+            onClick={() => {
+              getDB(query);
+            }}
+          >
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </button>
           <input
             className="graphLocationInput"
             type="datetime-local"
@@ -134,7 +144,12 @@ export const DashboardComponents = () => {
               setStartDate(moment(target.value).toISOString());
             }}
           />
-          <p className="graphLocationInput-text">부터</p>
+          <p
+            className="graphLocationInput-text"
+            style={{ marginRight: "10px" }}
+          >
+            부터
+          </p>
           <input
             className="graphLocationInput"
             type="datetime-local"

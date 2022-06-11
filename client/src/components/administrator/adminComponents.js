@@ -1,4 +1,7 @@
-import { faRotateRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faRotateRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import moment from "moment";
@@ -34,7 +37,7 @@ export function AdminComponents() {
   };
 
   useEffect(() => {
-    getDB(query);
+    // getDB(query);
     // eslint-disable-next-line
   }, [startDate, endDate, location]);
 
@@ -53,6 +56,14 @@ export function AdminComponents() {
           </button>
         </div>
         <div className="adminNav-right">
+          <button
+            className="graphBtn refreshBtn"
+            onClick={() => {
+              getDB(query);
+            }}
+          >
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          </button>
           <input
             className="graphLocationInput"
             type="datetime-local"
@@ -61,7 +72,12 @@ export function AdminComponents() {
               setStartDate(moment(target.value).toISOString());
             }}
           />
-          <p className="graphLocationInput-text">부터</p>
+          <p
+            className="graphLocationInput-text"
+            style={{ marginRight: "10px" }}
+          >
+            부터
+          </p>
           <input
             className="graphLocationInput"
             type="datetime-local"
