@@ -353,8 +353,8 @@ app.post("/api/data", async (req, res) => {
       tempArr.forEach(async (element, index, arr) => {
         if (index > 0) {
           const attenuation = noiseAttenuation(
-            element.location,
-            tempArr[0].location
+            parseInt(element.location),
+            parseInt(tempArr[0].location)
           );
           await Data.findByIdAndUpdate(element._id, {
             getSound:
