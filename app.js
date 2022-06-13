@@ -12,6 +12,7 @@ const User = require("./models/userModel");
 const History = require("./models/historyModel");
 const moment = require("moment");
 const odata = require("./odata");
+const noiseAttenuation = require("./noiseAttenuation");
 
 dotenv.config();
 const app = express();
@@ -351,14 +352,15 @@ app.post("/api/data", async (req, res) => {
       // Others
       tempArr.forEach(async (element, index, arr) => {
         if (index > 0) {
+          const attenuation = noiseAttenuation(location, tempArr[0].location);
           await Data.findByIdAndUpdate(element._id, {
             getSound:
-              arr[0].sound * 0.5 < element.sound
-                ? arr[0].sound * 0.5
-                : element.sound, // 0.5 => Noise attenuation factor
+              arr[0].sound * attenuation < element.sound
+                ? arr[0].sound * attenuation
+                : element.sound,
             postSound:
-              element.sound - arr[0].sound * 0.5 < element.sound
-                ? arr[0].sound * 0.5
+              element.sound - arr[0].sound * attenuation < element.sound
+                ? arr[0].sound * attenuation
                 : element.sound,
           });
         }
