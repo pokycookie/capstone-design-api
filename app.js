@@ -302,6 +302,10 @@ app.post("/api/data", async (req, res) => {
       const updated = new Date();
       const newData = new Data({ location, sound, vibration, updated });
 
+      console.log(
+        `===== POST DATA(${location}): ${moment(updated).format("HH:mm")} =====`
+      );
+
       const duplicateData = await Data.findOne({
         location,
         updated: {
@@ -312,21 +316,32 @@ app.post("/api/data", async (req, res) => {
 
       // Check duplicate data
       if (duplicateData !== null) {
-        await Data.findByIdAndUpdate(duplicateData._id, {
+        Data.findByIdAndUpdate(duplicateData._id, {
           sound: parseInt((duplicateData.sound + sound) / 2),
           vibration: parseInt((duplicateData.vibration + vibration) / 2),
           updated,
-        });
-        console.log(
-          `duplicateUpdate: ${parseInt(
-            (duplicateData.sound + sound) / 2
-          )} (+${sound} - ${location})`
-        );
+        })
+          .then((result) => {
+            console.log(
+              `duplicateUpdate: ${parseInt(
+                (duplicateData.sound + sound) / 2
+              )} (+${sound}) - ${location} / ${moment(updated).format("HH:mm")}`
+            );
+            res.status(200).json(result);
+          })
+          .catch((err) => {
+            console.err("duplicateData Error");
+            res.status(400).json(err);
+          });
       } else {
         await newData
           .save()
           .then(() => {
-            console.log(`Upload OK: ${sound} (${location})`);
+            console.log(
+              `Upload OK: ${sound} (${location}) / ${moment(updated).format(
+                "HH:mm"
+              )}`
+            );
             res.status(200).json({
               status: "OK",
               data: req.body,
@@ -373,6 +388,8 @@ app.post("/api/data", async (req, res) => {
           });
         }
       });
+
+      console.log(`POST DATA FINISHED: ${moment(updated).format("HH:mm")}`);
 
       // Incorrect auth
     } else {
