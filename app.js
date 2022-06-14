@@ -317,12 +317,16 @@ app.post("/api/data", async (req, res) => {
           vibration: parseInt((duplicateData.vibration + vibration) / 2),
           updated,
         });
-        console.log("Update OK");
+        console.log(
+          `duplicateUpdate: ${parseInt(
+            (duplicateData.sound + sound) / 2
+          )} (+${sound} - ${location})`
+        );
       } else {
         await newData
           .save()
           .then(() => {
-            console.log("Upload OK");
+            console.log(`Upload OK: ${sound} (${location})`);
             res.status(200).json({
               status: "OK",
               data: req.body,
