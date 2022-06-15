@@ -6,23 +6,19 @@ const INFO_WIDTH = 350; // 352 for square
 const INFO_WIDTH_FULL = INFO_WIDTH + 25; // 20 is margin-left
 
 function getColor(index) {
-  if (index < 4) {
-    switch (index) {
-      case 0:
-        return "#EB5353";
-      case 1:
-        return "#F8CB2E";
-      case 2:
-        return "#36AE7C";
-      case 3:
-        return "#187498";
-      case 4:
-        return "#A85CF9";
-      default:
-        return "#EB5353";
-    }
-  } else {
-    return `hsl(${index * 40}, 100%, 50%)`;
+  switch (index) {
+    case 0:
+      return "#EB5353";
+    case 1:
+      return "#F8CB2E";
+    case 2:
+      return "#36AE7C";
+    case 3:
+      return "#187498";
+    case 4:
+      return "#A85CF9";
+    default:
+      return `hsl(${index * 40}, 100%, 50%)`;
   }
 }
 
