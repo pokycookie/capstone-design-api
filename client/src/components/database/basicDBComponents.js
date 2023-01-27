@@ -172,11 +172,11 @@ export function BasicDBComponents(props) {
                 setSortOption={setSortOption}
                 content="sound"
               />
-              <SortList
+              {/* <SortList
                 sortOption={sortOption}
                 setSortOption={setSortOption}
                 content="vibration"
-              />
+              /> */}
               <SortList
                 sortOption={sortOption}
                 setSortOption={setSortOption}
@@ -224,7 +224,7 @@ export function BasicDBComponents(props) {
                 index={1}
                 content="Sound"
               />
-              <FilterList
+              {/* <FilterList
                 filterOption={filterOption}
                 setFilterOption={setFilterOption}
                 index={2}
@@ -235,7 +235,7 @@ export function BasicDBComponents(props) {
                 setFilterOption={setFilterOption}
                 index={3}
                 content="Updated"
-              />
+              /> */}
             </ul>
           </div>
         </div>
